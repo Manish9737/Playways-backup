@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 const Payments = () => {
   const { adminId } = useParams();
+
+  useEffect(() => {
+    document.title = "PlayWays Admin - Payments";
+  }, []);
 
   return (
     <div className="container">

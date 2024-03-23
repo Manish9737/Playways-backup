@@ -8,6 +8,10 @@ const GameStationGames = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.title = "PlayWays Host - Games"
+  })
+
 
   const fetchGamesOfGameStation = useCallback(async () => {
     try {
@@ -33,8 +37,8 @@ const GameStationGames = () => {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb mt-2">
             <li className="breadcrumb-item">
-              <Link to="/admin/" className="text-warning">
-                Admin
+              <Link to="/host/gameStations" className="text-warning">
+                GameStation
               </Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
@@ -43,7 +47,7 @@ const GameStationGames = () => {
           </ol>
         </nav>
 
-        <h2 className="text-center my-4">All Games</h2>
+        <h1 className="text-center my-4">Games</h1>
         <button
           className="btn btn-golden mb-3"
           onClick={() => navigate(`/host/gamestation/${stationId}/addGames`)}

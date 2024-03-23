@@ -18,7 +18,11 @@ const userApis = {
     fetchOtp: (email, OTP) => axiosInstance.post('/users/fetchOtp', {email, OTP}),
     resetPassword: ( email, otp, newPassword) => axiosInstance.post('/users/reset-password', {email, otp, newPassword}),
     getUserDetails: (userId) => axiosInstance.get(`/users/details/${userId}`),
-    updateUserDetails: (userId) => axiosInstance.get(`/users/update/ ${userId}`),
+    updateUserDetails: (userId, details) => axiosInstance.put(`/users/update/${userId}`, details, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
 
     // user feedback
     submitFeedback: (formData) => axiosInstance.post('/feedback/submit', formData),
@@ -28,8 +32,18 @@ const userApis = {
 
     // gameStations
     fetchGameStations: () => axiosInstance.get('/gameStation/allStations'),
-    getGameStationData: (id) => axiosInstance.get(`/gameStation/${id}`),
+    getGameStationData: (userId,id) => axiosInstance.get(`/users/${userId}/gameStation/${id}`),
+    getAllGamesOfGs: (stationId) => axiosInstance.get(`/gameStation/${stationId}/games`),
+    getGamedata: (stationId, gameId) => axiosInstance.get(`/gameStation/${stationId}/${gameId}/game`),
+    fetchSlots: (stationId, gameId, date) => axiosInstance.get(`/gameStation/${stationId}/${gameId}/${date}/slots`),
     
+    // Blogs
+    fetchBlogs: () => axiosInstance.get('/blogs/get'),
+
+
+    // Bookings
+    addBookings: (stationId, bookingData) => axiosInstance.post(`/bookings/${stationId}/addBooking`, bookingData),
+    getBookingsOfUser: (userId) => axiosInstance.get(`/users/${userId}/bookings`),
 
 };
 

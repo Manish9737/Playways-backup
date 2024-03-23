@@ -10,6 +10,10 @@ const GameStationBookings = () => {
   const [selectedBooking, setSelectedBooking] = useState(null);
 
   useEffect(() => {
+    document.title = "PlayWays Host - Bookings"
+  })
+
+  useEffect(() => {
     const fetchBookings = async () => {
       try {
         const response = await hostApis.getAllBookingsOfGs();
@@ -39,8 +43,8 @@ const GameStationBookings = () => {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb mt-2">
             <li className="breadcrumb-item">
-              <Link to="/admin/" className="text-warning">
-                Admin
+              <Link to="/host/gameStations" className="text-warning">
+                GameStation
               </Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">

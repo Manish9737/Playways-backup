@@ -65,7 +65,7 @@ const AdminSidebar = () => {
 
   return (
     <>
-      <nav className="navbar navbar-light bg-golden">
+      <nav className="navbar navbar-light bg-golden" id="adminSidebar">
         <div className="container-fluid d-flex justify-content-between align-items-center">
           <div className="text-start">
             <button
@@ -151,7 +151,7 @@ const AdminSidebar = () => {
                     </React.Fragment>
                   ))}
 
-                  <li className="nav-item">
+                  <li className="nav-item w-100">
                     <Link
                       className="nav-link align-middle px-0 px-3 w-100 m-1 text-white"
                       onClick={() => setShowLogoutModal(true)}

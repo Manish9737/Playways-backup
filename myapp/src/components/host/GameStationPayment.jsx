@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const GameStationPayment = () => {
+
+  useEffect(() => {
+    document.title = "PlayWays Host - Payments"
+  })
+
   return (
     <>
       <div className="container">
@@ -9,8 +14,8 @@ const GameStationPayment = () => {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb mt-2">
             <li className="breadcrumb-item">
-              <Link to="/admin/" className="text-warning">
-                Admin
+            <Link to="/host/gameStations" className="text-warning">
+                GameStation
               </Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">

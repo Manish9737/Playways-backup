@@ -1,9 +1,8 @@
-const GameStation = require("../../model/gsSchema");
 const Host = require("../../model/hostSchema");
+const GameStation = require("../../model/gsSchema");
 const Game = require("../../model/gameSchema");
 const Booking = require("../../model/bookingSchema");
-const User = require("../../model/userSchema");
-const multer = require("multer");
+const Slot = require("../../model/slotsSchema");
 
 const addGameStation = async (req, res, next) => {
   try {
@@ -14,7 +13,7 @@ const addGameStation = async (req, res, next) => {
       imgPath = `/images/${gsLogoFilename}`;
       console.log(gsLogoFilename);
     }
-    
+
     const {
       host,
       name,
@@ -133,7 +132,10 @@ const getGameStation = async (req, res, next) => {
 
 const allStations = async (req, res, next) => {
   try {
-    const gameStations = await GameStation.find({});
+    const gameStations = await GameStation.find({}).populate("host").populate({
+      path: "games.game",
+      model: "Games",
+    });
 
     res.status(200).json({ gameStations });
   } catch (error) {
@@ -421,7 +423,9 @@ const getCountOfStationsById = async (req, res, next) => {
 const getGsById = async (req, res, next) => {
   try {
     const gameStationId = req.params.id;
-    const gameStation = await GameStation.findById(gameStationId);
+    const gameStation = await GameStation.findById(gameStationId).populate(
+      "games.game"
+    );
 
     if (!gameStation) {
       return res.status(404).json({ message: "GameStation not found" });
@@ -463,7 +467,7 @@ const addGameToGs = async (req, res, next) => {
       game: gameId,
       description,
       slotPrice,
-      time
+      time,
     });
 
     await gameStation.save();
@@ -510,7 +514,7 @@ const getAllBookingsByGsId = async (req, res, next) => {
   const gameStationId = req.params.id;
 
   try {
-    const bookings = await await Booking.find({ gameStation: gameStationId })
+    const bookings = await Booking.find({ gameStation: gameStationId })
       .populate("userId", "-password")
       .populate("gameStationId");
 
@@ -543,7 +547,9 @@ const updateOpeningClosingTime = async (req, res, next) => {
     const gameStation = await GameStation.findById(id);
 
     if (!gameStation) {
-      return res.status(404).json({ message: 'GameStation not found', success: false });
+      return res
+        .status(404)
+        .json({ message: "GameStation not found", success: false });
     }
 
     gameStation.openingTime = openingTime;
@@ -552,86 +558,127 @@ const updateOpeningClosingTime = async (req, res, next) => {
 
     await gameStation.save();
 
-    return res.status(200).json({ message: 'Opening and closing times updated successfully', success: true, gameStation });
+    return res.status(200).json({
+      message: "Opening and closing times updated successfully",
+      success: true,
+      gameStation,
+    });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Internal server error', success: false });
+    return res
+      .status(500)
+      .json({ message: "Internal server error", success: false });
   }
 };
 
-// const generateGameSlots = async (req, res, next) => {
-//   try {
-//     const { gameStationId } = req.params;
-//     const slots = [];
+const getStationSlots = async (req, res) => {
+  try {
+    const { gsid, date, gameid } = req.params;
 
-//     // Fetch game station details
-//     const gameStation = await GameStation.findById(gameStationId);
-//     if (!gameStation) {
-//       return res.status(404).json({ message: "GameStation not found", success: false });
-//     }
+    const queryDate = new Date(date);
 
-//     const gameIds = gameStation.games.map(game => game.game); // Extract game IDs
-//     const games = await Game.find({ _id: { $in: gameIds } });
-//     if (!games || games.length === 0) {
-//       return res.status(404).json({ message: "No games found for the provided game station", success: false });
-//     }
+    const startDate = new Date(
+      queryDate.getFullYear(),
+      queryDate.getMonth(),
+      queryDate.getDate()
+    );
+    const endDate = new Date(
+      queryDate.getFullYear(),
+      queryDate.getMonth(),
+      queryDate.getDate(),
+      23,
+      59,
+      59
+    );
 
-//     // Iterate over each game
-//     for (const game of games) {
-//       const gameDuration = game.time;
-//       const slotInterval = 30; // Assuming slots are generated in 30-minute intervals
-      
-//       // Iterate over each hour within the opening hours of the game station
-//       for (let hour = gameStation.openingTime; hour < gameStation.closingTime; hour++) {
-//         // Iterate over each minute within the hour
-//         for (let minute = 0; minute < 60; minute += slotInterval) {
-//           const slotStartTime = `${hour}:${minute < 10 ? '0' + minute : minute}`;
-//           const slotEndTime = calculateEndTime(hour, minute, gameDuration);
+    const slots = await Slot.find({
+      gsid,
+      gameid,
+      date: { $gte: startDate, $lte: endDate },
+    });
 
-//           // Check if the maximum number of matches for this slot is already booked
-//           const existingBookings = await Booking.find({
-//             gameStation: gameStationId,
-//             startTime: slotStartTime,
-//             endTime: slotEndTime
-//           });
+    res.json({ slots });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
 
-//           const maxMatchesAllowed = game.matches || 1;
-//           const bookedMatches = existingBookings.reduce((total, booking) => total + booking.matches, 0);
-//           const availableMatches = maxMatchesAllowed - bookedMatches;
+const getSlotsbyGsid = async (req, res, next) => {
+  const { gsid } = req.params;
+  try {
+    const slots = await Slot.find({ gsid })
+      .populate({
+        path: "gameid",
+        model: "Games",
+      })
+      .populate({
+        path: "gsid",
+        model: "GameStation", 
+      });
 
-//           // Only add slots if there are available matches
-//           if (availableMatches > 0) {
-//             // Create a new slot object and add it to the array
-//             slots.push({
-//               game: game.description,
-//               startTime: slotStartTime,
-//               endTime: slotEndTime,
-//               availableMatches: availableMatches // Optional: include the available matches in the slot object
-//             });
-//           }
-//         }
-//       }
-//     }
+    res.json({ slots });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
 
-//     res.status(200).json({ slots, success: true });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: "Internal server error", success: false });
-//   }
-// };
+const getGameByIdFromGs = async (req, res, next) => {
+  const { stationId, gameId } = req.params;
 
+  try {
+    const gameStation = await GameStation.findById(stationId).populate(
+      "games.game"
+    ); // Populate the 'games' field
 
-// // Helper function to calculate end time of the slot
-// function calculateEndTime(startHour, startMinute, duration) {
-//   let endHour = startHour + Math.floor((startMinute + duration) / 60);
-//   let endMinute = (startMinute + duration) % 60;
+    if (!gameStation) {
+      return res.status(404).json({ message: "GameStation not found" });
+    }
 
-//   if (endHour > 23) {
-//     endHour -= 24;
-//   }
+    const game = gameStation.games.find(
+      (g) => g.game._id.toString() === gameId
+    ); // Access the populated game object
 
-//   return `${endHour}:${endMinute < 10 ? '0' + endMinute : endMinute}`;
-// }
+    if (!game) {
+      return res
+        .status(404)
+        .json({ message: "Game not found in this GameStation" });
+    }
+
+    return res.status(200).json(game);
+  } catch (error) {
+    console.error("Error fetching game:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const getSlotsByStationIdGameIdDate = async (req, res) => {
+  try {
+    const { stationId, gameId, date } = req.params;
+
+    const formattedDate = new Date(date).toISOString().split('T')[0];
+
+    const startDate = new Date(formattedDate);
+    const endDate = new Date(formattedDate);
+    endDate.setHours(23, 59, 59); 
+
+    const slots = await Slot.find({
+      gsid: stationId,
+      gameid: gameId,
+      date: { $gte: startDate, $lte: endDate },
+    });
+
+    if (!slots || slots.length === 0) {
+      return res.status(404).json({ message: "No slots found for the provided parameters" });
+    }
+
+    res.json({ slots });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
 
 module.exports = {
   addGameStation,
@@ -650,5 +697,8 @@ module.exports = {
   getGamesOfGs,
   getAllBookingsByGsId,
   updateOpeningClosingTime,
-  // generateGameSlots,
+  getStationSlots,
+  getSlotsbyGsid,
+  getGameByIdFromGs,
+  getSlotsByStationIdGameIdDate
 };

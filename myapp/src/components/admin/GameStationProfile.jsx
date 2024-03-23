@@ -18,6 +18,10 @@ const GameStationProfile = () => {
   });
 
   useEffect(() => {
+    document.title = "PlayWays Admin - Station Profile";
+  }, []);
+
+  useEffect(() => {
     const fetchStationData = async () => {
       try {
         const response = await adminApis.getGameStationData(stationId);
@@ -31,7 +35,7 @@ const GameStationProfile = () => {
 
     fetchStationData();
 
-    const interval = setInterval(fetchStationData, 2000);
+    const interval = setInterval(fetchStationData, 5000);
     return () => clearInterval(interval);
   }, [stationId]);
 

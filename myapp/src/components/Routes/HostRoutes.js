@@ -9,7 +9,7 @@ import GameStationForm from "../host/GameStationForm";
 import GameCatalogPage from "../host/GameCatalogPage";
 import HostSidebar from "../host/HostSidebar";
 import NoPage from "../User/NoPage";
-import GsDetails from "../admin/GsDetails";
+// import GsDetails from "../admin/GsDetails";
 import GameStationProfile from "../host/GameStationProfile";
 import GameStationSidebar from "../host/GameStationSidebar";
 import GameStationGames from "../host/GameStationGames";
@@ -21,6 +21,15 @@ import HostResetPassword from "../host/HostResetPassword";
 import Demo from "../host/Demo";
 import PrivateRoute from "../host/PrivateRoute";
 import GsTiming from "../host/GsTiming";
+import UpdateDetails from "../host/UpdateDetails";
+import Slots from "../host/Slots";
+import AddSlotsForm from "../host/AddSlots";
+import ContactUs from "../User/ContactUs";
+import AboutUs from "../User/AboutUs";
+import FAQpage from "../User/FAQPage";
+import FeedbackPage from "../User/FeedbackPage";
+import TermsAndConditions from "../User/TermsAndConditions" 
+import BankDetailsForm from "../host/BankDetailsForm";
 
 const HostRoutes = () => {
   return (
@@ -48,7 +57,11 @@ const HostRoutes = () => {
           <Route path="addGameStation" element={<GameStationForm />} />
           <Route path="sidebar" element={<HostSidebar />} />
           <Route path="*" element={<NoPage />} />
-          <Route path="gs" element={<GsDetails />} />
+          <Route path="contactUs" element={<ContactUs />} /> 
+          <Route path="aboutUs" element={<AboutUs />} /> 
+          <Route path="FAQs" element={<FAQpage />} /> 
+          <Route path="feedback" element={<FeedbackPage />} /> 
+          <Route path="T&C" element={<TermsAndConditions />} /> 
         </Route>
 
         <Route
@@ -59,10 +72,14 @@ const HostRoutes = () => {
             </PrivateRoute>
           }
         >
+          <Route path="bankDetails" element={<BankDetailsForm />} />
           <Route path=":stationId" element={<GameStationProfile />} />
+          <Route path=":stationId/updateProfile" element={<UpdateDetails />} />
           <Route path=":stationId/addTiming" element={<GsTiming />} />
           <Route path=":stationId/bookings" element={<GameStationBookings />} />
           <Route path=":stationId/games" element={<GameStationGames />} />
+          <Route path=":stationId/slots" element={<Slots />} />
+          <Route path=":stationId/addSlots" element={<AddSlotsForm />} />
           <Route path=":stationId/addGames" element={<GameCatalogPage />} />
           <Route path=":stationId/payments" element={<GameStationPayment />} />
         </Route>

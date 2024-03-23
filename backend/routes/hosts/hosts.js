@@ -12,10 +12,10 @@ const {
   resetPassword,
   fetchOTP,
 } = require("../../controller/host/hostController");
-const setupGoogleStrategy = require("../../middlewares/googleStrategy");
+// const setupGoogleStrategy = require("../../middlewares/googleStrategy");
 
 require("dotenv").config();
-setupGoogleStrategy(passport);
+// setupGoogleStrategy(passport);
 
 router.post("/register", registerHost); // register route
 
@@ -37,27 +37,6 @@ router.post("/fetchOtp", fetchOTP); // Login route
 
 
 
-// router.get('/auth/google', async (req, res) => {
-//   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); // Set the correct origin
-//   passport.authenticate('google-login', {
-//     scope: ['profile', 'email'] // Define the required scope here
-//   })(req, res);
-// });
 
-// router.get('/auth/google/callback', passport.authenticate('google-login', {
-//   successRedirect: 'http://localhost:3000/host/home', // Redirect to home upon successful authentication
-//   failureRedirect: 'http://localhost:3000/host/login', // Redirect to login page on failure
-// }));
-
-// // Protected route example - Requires authentication
-// router.get('/protected', (req, res, next) => {
-//   if (req.isAuthenticated()) {
-//     // If authenticated, proceed with the request
-//     res.json({ message: 'Access granted to protected route', user: req.user });
-//   } else {
-//     // If not authenticated, respond with an error
-//     res.status(401).json({ message: 'Unauthorized' });
-//   }
-// });
 
 module.exports = router;

@@ -26,6 +26,13 @@ const hostApis = {
         "Content-Type": "multipart/form-data",
       },
     }),
+    updateGameStation: (stationId,formdata) => axiosInstance.put(`/gameStation/updateGameStation/${stationId}`, formdata,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+    deleteGameStation: (stationId) => axiosInstance.delete(`/gameStation/gameStation/${stationId}`),
     getGameStationData: (id) => axiosInstance.get(`/gameStation/${id}`),
     getAllGamesOfGs: (stationId) => axiosInstance.get(`/gameStation/${stationId}/games`),
     getAllGames: () => axiosInstance.get('/games/all'),
@@ -38,6 +45,17 @@ const hostApis = {
         "Content-Type": "multipart/form-data",
       },
     }),
+    addVideo: (stationId, formdata) => axiosInstance.post(`/gameStation/${stationId}/Video`, formdata,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+    getAllSlotsbyGsId: (stationId) => axiosInstance.get(`/gameStation/${stationId}/slots`),
+    getAllSlotsbyGsIdandDate: (stationId,date) => axiosInstance.get(`/gameStation/${stationId}/slots/${date}`),
+    addSlots: (stationId, slots) => axiosInstance.post(`/slots/${stationId}/addSlots`, slots),
+    updateSlotTime: (slotId, slotsData) => axiosInstance.put(`/slots/${slotId}/updateSlot`, slotsData),
+    deleteSlot: (slotId) => axiosInstance.delete(`/slots/${slotId}/deleteSlot`),
 };
 
 export default hostApis;

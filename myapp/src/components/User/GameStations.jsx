@@ -16,6 +16,10 @@ const GameStations = () => {
     fetchGameStations();
   }, []);
 
+  useEffect(() => {
+    document.title = "Play Ways - GameStations";
+  }, []);
+
   const fetchGameStations = async () => {
     try {
       const response = await userApis.fetchGameStations();
@@ -34,7 +38,7 @@ const GameStations = () => {
   };
 
   const handleBookClick = (_id) => {
-    navigate(`/gameStation/${_id}`);
+    navigate(`/gameStation/${_id}/games`);
   };
 
   const filteredStations = gameStations.filter(
@@ -147,9 +151,9 @@ const GameStations = () => {
                               >
                                 Book
                               </button>
-                              <p className="card-text ms-1">
+                              <p className="card-text ms-1 mt-2">
                                 <small className="text-muted">
-                                  Sports: Cricket
+                                  Sports: {station.games.length > 0 ? station.games.map(game => game.game.name).join(", ") : "Not available"}
                                 </small>
                               </p>
                             </div>

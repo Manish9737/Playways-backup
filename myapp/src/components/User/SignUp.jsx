@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
 import userApis from "../apis/UserApis";
+import { Spinner } from "react-bootstrap";
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const [formData, setFormData] = useState({
     userName: "",
     email: "",
@@ -13,20 +17,29 @@ const SignUp = () => {
     cpassword: "",
   });
 
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+
+    if (userId) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const validateEmail = (email) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(email);
   };
 
   const validatePhone = (phone) => {
-    const phonePattern = /^\d{10}$/; // Simple phone number validation
+    const phonePattern = /^\d{10}$/;
     return phonePattern.test(phone);
   };
 
   const validatePassword = (password) => {
-    const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?!.*\s).{8,}$/;
+    const passwordPattern =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?!.*\s).{8,}$/;
     return passwordPattern.test(password);
   };
 
@@ -34,9 +47,7 @@ const SignUp = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-
   const { userName, email, phone, password, cpassword } = formData;
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,60 +55,71 @@ const SignUp = () => {
     setFormData({ ...formData, [name]: value });
 
     if (name === "email" && !validateEmail(value)) {
-      e.target.style.borderColor = 'red';
+      e.target.style.borderColor = "red";
     } else if (name === "phone" && !validatePhone(value)) {
-      e.target.style.borderColor = 'red';
-    } else if ((name === "password" || name === "cpassword") && !validatePassword(value)) {
-      e.target.style.borderColor = 'red';
+      e.target.style.borderColor = "red";
+    } else if (
+      (name === "password" || name === "cpassword") &&
+      !validatePassword(value)
+    ) {
+      e.target.style.borderColor = "red";
     } else if (name === "userName" && !value.trim()) {
-      e.target.style.borderColor = 'red';
+      e.target.style.borderColor = "red";
     } else {
-      e.target.style.borderColor = '';
+      e.target.style.borderColor = "";
     }
   };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setButtonDisabled(true);
 
     if (!userName || !email || !phone || !password || !cpassword) {
       console.error("Please fill in all fields properly.");
       setError("Please fill in all fields properly.");
+      setButtonDisabled(false);
       return;
     }
 
     if (password !== cpassword) {
       console.error("Password doesn't match.");
       setError("Password doesn't match.");
+      setButtonDisabled(false);
       return;
     }
 
     if (!validateEmail(email)) {
       setError("Invalid email.");
+      setButtonDisabled(false);
       return;
     }
 
     if (!validatePhone(phone)) {
       setError("Invalid phone number.");
+      setButtonDisabled(false);
       return;
     }
 
     if (!validatePassword(password)) {
-      setError("Password should be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
+      setError(
+        "Password should be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
+      );
+      setButtonDisabled(false);
       return;
     }
 
     try {
+      setLoading(true);
       const response = await userApis.register(
         userName,
         email,
         phone,
-        password,
+        password
       );
 
       if (response.status === 200) {
         console.log("User registered successfully.");
         navigate("/login");
-        // Redirect to login or show a success message to the user
       } else {
         console.error("Registration failed:", response.data.error);
         setError("Registration failed.");
@@ -105,6 +127,9 @@ const SignUp = () => {
     } catch (error) {
       console.error("Registration failed:", error.message);
       setError("Registration failed.");
+    } finally {
+      setLoading(false);
+      setButtonDisabled(false);
     }
   };
 
@@ -137,12 +162,18 @@ const SignUp = () => {
                       Sign up
                     </h2>
 
-                    {/* Error msg */}
+                    {loading && (
+                      <div className="text-center">
+                        <Spinner animation="border" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      </div>
+                    )}
+
                     {error && (
                       <div className="alert alert-danger ">{error}</div>
                     )}
 
-                    {/* form */}
                     <form className="" method="post" onSubmit={handleSignUp}>
                       <div className="form-outline mb-4">
                         <label htmlFor="userName" className="form-label">
@@ -222,7 +253,6 @@ const SignUp = () => {
                           id="cpassword"
                           name="cpassword"
                           placeholder="Confirm Password"
-                          // autoComplete="password"
                           value={cpassword}
                           onChange={handleChange}
                           required
@@ -244,56 +274,30 @@ const SignUp = () => {
                         </label>
                       </div>
 
-                      {/* Submit button */}
                       <div className="text-center">
                         <button
                           type="submit"
                           className="btn btn-block btn-lg w-100"
                           id="logIn"
+                          disabled={loading || buttonDisabled}
                         >
-                          Sign up
+                          {loading ? "Signing up..." : "Sign up"}
                         </button>
                       </div>
 
-                      {/* Register buttons */}
-                      <div className="text-center">
-                        <p className="hrline">or</p>
-                        <div className="d-flex justify-content-center align-items-center">
-                          {/* Icons in a row */}
-                          <div className="">
-                            <button
-                              type="button"
-                              className="btn btn-link btn-floating mx-1"
-                            >
-                              <img
-                                src={require("../imgs/google.png")}
-                                alt=""
-                                className="login-icon"
-                                width={"20%"}
-                              />
-                            </button>
-                          </div>
-
-                          <div className="">
-                            <button
-                              type="button"
-                              className="btn btn-link btn-floating mx-1"
-                            >
-                              <img
-                                src={require("../imgs/facebook.png")}
-                                alt=""
-                                className="login-icon"
-                                width={"20%"}
-                              />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                      <p className="hrline">or</p>
 
                       {/* Link to login */}
-                      <div className="">
-                        <Link className="btn w-100" to={"/login"}>
+                      <div className=" text-center">
+                        <Link className="w-100" to={"/login"}>
                           Already have a Account ?
+                        </Link>{" "}
+                        <br />
+                        <Link
+                          className="w-100 text-decoration-none text-muted"
+                          to={"/T&C"}
+                        >
+                          Terms & Conditions
                         </Link>
                       </div>
                     </form>

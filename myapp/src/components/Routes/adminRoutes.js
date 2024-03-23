@@ -18,6 +18,7 @@ import "../Assets/CSS/Admin.css";
 import PrivateRoute from "../admin/PrivateRoutes";
 import PasswordChange from "../admin/PasswordChange";
 import Admins from "../admin/Admins";
+import Blogs from "../admin/Blogs";
 
 const AdminRoutes = () => {
   return (
@@ -48,6 +49,7 @@ const AdminRoutes = () => {
           <Route path=":adminId/quotes" element={<Quotes />} />
           <Route path=":adminId/games" element={<Games />} />
           <Route path=":adminId/users" element={<Users />} />
+          <Route path=":adminId/blogs" element={<Blogs />} />
           <Route path=":adminId/bookings" element={<Bookings />} />
           <Route path=":adminId/gameStations" element={<GsDetails />} />
           <Route path="*" element={<NoPage />} />

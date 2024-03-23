@@ -35,7 +35,7 @@ const HostOtpVerification = () => {
         const response = await hostApis.fetchOtp(email, OTP);
         if (response.status === 200) {
           setSuccess("OTP verification successful.");
-          localStorage.setItem("otp", OTP);
+          localStorage.setItem("hostOtp", OTP);
 
           setTimeout(() => {
             navigate("/host/reset-password");

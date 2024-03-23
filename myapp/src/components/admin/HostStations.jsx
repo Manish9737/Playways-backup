@@ -26,7 +26,7 @@ const HostStations = () => {
 
     fetchStationsByHostId();
 
-    const interval = setInterval(fetchStationsByHostId, 2000);
+    const interval = setInterval(fetchStationsByHostId, 5000);
     return () => clearInterval(interval);
   }, [hostId]);
 

@@ -7,6 +7,7 @@ import { GridLoader } from "react-spinners";
 const ContactUs = () => {
   const [loading, setLoading] = useState(false);
   const [showThanks, setShowThanks] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -40,11 +41,15 @@ const ContactUs = () => {
         message: "",
       });
       setTimeout(() => {
-        setShowThanks(false); // Hide thanks message after 3 seconds
+        setShowThanks(false);
       }, 2000);
     } catch (error) {
+      setLoading(false);
       console.error("Error submitting message:", error);
-      alert("Failed to send message. Please try again later.");
+      setErrorMessage("Failed to send message. Please try again later.");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 1500);
     }
   };
 
@@ -56,13 +61,9 @@ const ContactUs = () => {
     window.location.href = "mailto:playways83@gmail.com";
   };
 
-  // const handleInstagramClick = () => {
-  //   window.open("https://www.instagram.com/Play_Ways", "_blank");
-  // };
-
   const handleFacebookClick = () => {
     window.open(
-      "https://www.facebook.com/profile.php?id=100090019782453&mibextid=ZbWKwL",
+      "https://www.facebook.com/profile.php?id=61555468633232&mibextid=ZbWKwL",
       "_blank"
     );
   };
@@ -209,12 +210,25 @@ const ContactUs = () => {
             <div className="row justify-content-center mt-4">
               <div className="col-md-12 ">
                 {showThanks ? (
-                  <div className="bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center" style={{ minHeight: "60vh" }}>
-                    <div
-                      className="alert alert-success mt-3 text-center"
-                      role="alert"
-                    >
-                      Thanks! Your message has been sent successfully.
+                  <div
+                    className="row bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center"
+                    style={{ minHeight: "70vh" }}
+                  >
+                    <div className="col-md-6 d-flex align-items-center justify-content-center">
+                      <div
+                        className="alert alert-success mt-3 text-center"
+                        role="alert"
+                      >
+                        Thanks! Your message has been sent successfully.
+                      </div>
+                    </div>
+                    <div className="col-md-6 d-flex align-items-center justify-content-center">
+                      <img
+                        src={require("../imgs/illustrations/contact_us.png")}
+                        alt="..."
+                        className="img-fluid"
+                        style={{ mixBlendMode: "multiply" }}
+                      />
                     </div>
                   </div>
                 ) : (
@@ -241,6 +255,14 @@ const ContactUs = () => {
                               <h2 className="h1-responsive font-weight-bold text-center my-4 mb-5">
                                 Contact us
                               </h2>
+                              {errorMessage && (
+                                <div
+                                  className="alert alert-danger mt-3 text-center"
+                                  role="alert"
+                                >
+                                  {errorMessage}
+                                </div>
+                              )}
                               <form
                                 id="contact-form"
                                 name="contact-form"

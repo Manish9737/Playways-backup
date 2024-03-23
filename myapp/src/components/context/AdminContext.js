@@ -23,6 +23,9 @@ export const AdminProvider = ({ children }) => {
         setError(null);
       } catch (error) {
         setError("An error occurred while fetching admin details.");
+        setTimeout(() => {
+          setError("");
+        }, 1500);
         console.error("Fetch admin details error:", error);
       }
     };
@@ -42,7 +45,6 @@ export const AdminProvider = ({ children }) => {
         setAdmin({ id: response.data.admin._id });
         setIsAuthenticated(true);
         navigate(`/admin/${adminId}/dashboard`);
-
         setError(null);
       } else {
         setIsAuthenticated(false);
@@ -51,6 +53,9 @@ export const AdminProvider = ({ children }) => {
     } catch (error) {
       setIsAuthenticated(false);
       setError("An error occurred while logging in. Please try again.");
+      setTimeout(() => {
+        setError("");
+      }, 1500);
       console.error("Login error:", error);
     }
   };

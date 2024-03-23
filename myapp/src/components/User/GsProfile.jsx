@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import userApis from "../apis/UserApis";
-import Logo from "../imgs/Logo.png"
+import Logo from "../imgs/Logo.png";
+import { FaArrowLeft, FaMapMarkerAlt } from "react-icons/fa";
 
 const GsProfile = () => {
   const { stationId } = useParams();
   const [stationData, setStationData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showImages, setShowImages] = useState(true);
+  const userId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    document.title = "Play Ways - GameStation Profile";
+  }, []);
 
   useEffect(() => {
     const fetchStationData = async () => {
       try {
-        const response = await userApis.getGameStationData(stationId);
+        const response = await userApis.getGameStationData(userId, stationId);
         setStationData(response.data.gameStation);
         setLoading(false);
       } catch (error) {
@@ -22,13 +28,20 @@ const GsProfile = () => {
     };
 
     fetchStationData();
-  }, [stationId]);
+  }, [stationId, userId]);
 
   const toggleView = (view) => {
     if (view === "images") {
       setShowImages(true);
     } else if (view === "videos") {
       setShowImages(false);
+    }
+  };
+
+  const handleMapClick = () => {
+    if (stationData && stationData.latitude && stationData.longitude) {
+      const mapUrl = `https://maps.google.com/?q=${stationData.latitude},${stationData.longitude}`;
+      window.open(mapUrl, "_blank");
     }
   };
 
@@ -43,6 +56,30 @@ const GsProfile = () => {
               <div className="row p-md-0 p-3">
                 <div className="card bg-golden rounded-4 bg-opacity-50 shadow ">
                   <div className="card-body text-white">
+                    <div className="row mb-3">
+                      <div className="col-12">
+                        <div className="row">
+                          <div className="col-md-6">
+                            <div className="text-start">
+                              <Link to="/gameStations" className="text-white">
+                                <FaArrowLeft className="fs-5" />
+                              </Link>
+                            </div>
+                          </div>
+                          <div className="col-md-6">
+                            <div className="text-end">
+                              <Link
+                              title="Show station on map"
+                                className="text-white me-2"
+                                onClick={handleMapClick}
+                              >
+                                <FaMapMarkerAlt className="fs-5" />
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <div className="row">
                       <div className="col-md-4 d-flex align-items-center justify-content-center">
                         <div

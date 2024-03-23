@@ -26,7 +26,7 @@ const Dashboard = () => {
   const [totalGames, setTotalGames] = useState(0);
   const [totalHosts, setTotalHosts] = useState(0);
   const [activities, setActivities] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [sending, setSending] = useState(false);
   const [toast, setToast] = useState({
     show: false,
     type: "",
@@ -44,9 +44,13 @@ const Dashboard = () => {
       fetchGameStations();
       fetchGames();
       fetchHosts();
-    }, 200000);
+    }, 10000);
 
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    document.title = "PlayWays Admin - Dashboard";
   }, []);
 
   useEffect(() => {
@@ -103,7 +107,7 @@ const Dashboard = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setSending(true);
 
     try {
       const response = await adminApis.sendEmail(
@@ -144,7 +148,7 @@ const Dashboard = () => {
         });
       }
     } finally {
-      setLoading(false);  
+      setSending(false);
     }
   };
 
@@ -191,7 +195,7 @@ const Dashboard = () => {
                     <p className="card-text">Total Users</p>
                   </div>
                   <div className="col-md-4 d-flex align-items-center justify-content-center text-center ">
-                    <Link to={"/admin/users"} className="btn btn-light btn-lg">
+                    <Link to={`/admin/${adminId}/users`} className="btn btn-light btn-lg">
                       <FaUser />
                     </Link>
                   </div>
@@ -209,7 +213,7 @@ const Dashboard = () => {
                     <p className="card-text">Total Hosts</p>
                   </div>
                   <div className="col-md-4 d-flex align-items-center justify-content-center text-center">
-                    <Link to={"/admin/hosts"} className="btn btn-light btn-lg">
+                    <Link to={`/admin/${adminId}/hosts`} className="btn btn-light btn-lg">
                       <FaUserTie />
                     </Link>
                   </div>
@@ -227,7 +231,7 @@ const Dashboard = () => {
                     <p className="card-text">Total Games</p>
                   </div>
                   <div className="col-md-4 d-flex align-items-center justify-content-center text-center">
-                    <Link to={"/admin/games"} className="btn btn-light btn-lg">
+                    <Link to={`/admin/${adminId}/games`} className="btn btn-light btn-lg">
                       <FaGamepad />
                     </Link>
                   </div>
@@ -246,7 +250,7 @@ const Dashboard = () => {
                   </div>
                   <div className="col-md-4 d-flex align-items-center justify-content-center text-center">
                     <Link
-                      to={"/admin/gameStations"}
+                      to={`/admin/${adminId}/gameStations`}
                       className="btn btn-light btn-lg"
                     >
                       <FaLaptop />
@@ -300,9 +304,9 @@ const Dashboard = () => {
                   <button
                     type="submit"
                     className="btn btn-golden"
-                    disabled={loading}
+                    disabled={sending}
                   >
-                    {loading ? "Sending..." : "Send Email"}
+                    {sending ? "Sending..." : "Send Email"}
                   </button>
                 </form>
               </div>
@@ -317,37 +321,34 @@ const Dashboard = () => {
             >
               {activities.length > 0 ? (
                 <div className="card-body">
-                  {activities
-                    .slice()
-                    .reverse()
-                    .map((activity, index) => (
-                      <div key={index} className="card mb-2">
-                        <div className="card-body">
-                          <div className=" d-flex align-items-center justify-content-center">
-                            <div className="">
-                              {activity.actionType === "add" && (
-                                <FaPencilAlt className="text-success fs-3" />
-                              )}
-                              {activity.actionType === "update" && (
-                                <FaSyncAlt className="text-warning fs-3" />
-                              )}
-                              {activity.actionType === "delete" && (
-                                <FaTrash className="text-danger fs-3" />
-                              )}
-                              {activity.actionType === "other" && (
-                                <FaCog className="text-secondary fs-3" />
-                              )}
-                            </div>
-                            <div className="col-md-9">
-                              <h6>{activity.activityType}</h6>
-                              <small>
-                                {new Date(activity.timestamp).toLocaleString()}
-                              </small>
-                            </div>
+                  {activities.map((activity, index) => (
+                    <div key={index} className="card mb-2">
+                      <div className="card-body">
+                        <div className=" d-flex align-items-center justify-content-center">
+                          <div className="">
+                            {activity.actionType === "add" && (
+                              <FaPencilAlt className="text-success fs-3" />
+                            )}
+                            {activity.actionType === "update" && (
+                              <FaSyncAlt className="text-warning fs-3" />
+                            )}
+                            {activity.actionType === "delete" && (
+                              <FaTrash className="text-danger fs-3" />
+                            )}
+                            {activity.actionType === "other" && (
+                              <FaCog className="text-secondary fs-3" />
+                            )}
+                          </div>
+                          <div className="col-md-9">
+                            <h6>{activity.activityType}</h6>
+                            <small>
+                              {new Date(activity.timestamp).toLocaleString()}
+                            </small>
                           </div>
                         </div>
                       </div>
-                    ))}
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <div className="card-body text-center">

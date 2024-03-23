@@ -7,8 +7,12 @@ const bookingSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    slotDateTime: {
-      type: Date,
+    slotDate: {
+      type: String,
+      required: true,
+    },
+    slotTiming: {
+      type: String,
       required: true,
     },
     duration: {
@@ -21,12 +25,18 @@ const bookingSchema = new mongoose.Schema(
       required: true,
     },
     game: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Games",
       required: true,
     },
     status: {
       type: String,
       enum: ["pending", "confirmed", "cancelled"],
+      default: "pending",
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "failed"],
       default: "pending",
     },
   },

@@ -1,4 +1,4 @@
-import { FaBook, FaGamepad, FaHome, FaUser } from "react-icons/fa";
+import { FaBook, FaDollarSign, FaGamepad, FaHome, FaUser } from "react-icons/fa";
 
 const SidebarGs = (stationId) => [
   {
@@ -26,8 +26,14 @@ const SidebarGs = (stationId) => [
     cName: "nav-text",
   },
   {
-    title: "Payments",
+    title: "Slots",
     icon: <FaGamepad className="text-warning" />,
+    path: `/host/gamestation/${stationId}/slots`,
+    cName: "nav-text",
+  },
+  {
+    title: "Payments",
+    icon: <FaDollarSign className="text-warning" />,
     path: `/host/gamestation/${stationId}/payments`,
     cName: "nav-text",
   },

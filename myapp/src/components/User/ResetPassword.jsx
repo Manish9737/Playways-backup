@@ -25,7 +25,7 @@ const ResetPassword = () => {
   const handlePasswordChange = (e) => {
     const passwordValue = e.target.value;
     setConfirmPassword(passwordValue);
-    setInvalidPassword(!validatePassword(passwordValue)); // Update password validity state
+    setInvalidPassword(!validatePassword(passwordValue));
     if (!validatePassword(passwordValue)) {
       e.target.style.borderColor = "red";
     } else {
@@ -36,7 +36,7 @@ const ResetPassword = () => {
   const handleCPasswordChange = (e) => {
     const passwordValue = e.target.value;
     setNewPassword(passwordValue);
-    setInvalidPassword(!validatePassword(passwordValue)); // Update password validity state
+    setInvalidPassword(!validatePassword(passwordValue));
     if (!validatePassword(passwordValue)) {
       e.target.style.borderColor = "red";
     } else {
@@ -48,7 +48,6 @@ const ResetPassword = () => {
     e.preventDefault();
 
     try {
-      // Validation
       if (newPassword !== confirmPassword) {
         setErrorMessage("Passwords don't match.");
         setSuccessMessage("");
@@ -71,6 +70,9 @@ const ResetPassword = () => {
         setSuccessMessage(response.data.message);
         setErrorMessage("");
         navigate("/login");
+
+        localStorage.removeItem("email");
+        localStorage.removeItem("otp");
       } else {
         setErrorMessage(response.data.error);
         setSuccessMessage("");

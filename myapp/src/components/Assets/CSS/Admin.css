@@ -4,8 +4,11 @@ body {
   font-family: Quicksand;
 }
 
-.selected{
-  background-color: rgb(251, 249, 249) !important;
-  color: #000 !important;
-  transition: all 0.6s ease;
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1); 
+  color: #fff; 
+}
+
+.custom-modal-width .modal-dialog {
+  max-width: 700px; 
 }

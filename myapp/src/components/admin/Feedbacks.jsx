@@ -9,6 +9,10 @@ const Feedbacks = () => {
   const [feedbacks, setFeedbacks] = useState([]);
 
   useEffect(() => {
+    document.title = "PlayWays Admin - Feedback";
+  }, []);
+
+  useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
         const response = await adminApis.getAllFeedback();

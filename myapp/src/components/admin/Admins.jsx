@@ -34,6 +34,10 @@ const Admins = () => {
     fetchAdmins();
   }, []);
 
+  useEffect(() => {
+    document.title = "PlayWays Admin - Admins";
+  }, []);
+
   const fetchAdmins = async () => {
     try {
       const response = await adminApis.allAdmins();
@@ -128,6 +132,7 @@ const Admins = () => {
 
         <button
           className="btn btn-golden"
+          title="Add new admin"
           onClick={() => setShowAddAdminModal(true)}
         >
           <FaPlus /> Add Admin
@@ -210,18 +215,15 @@ const Admins = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedAdminActivities
-                        .slice()
-                        .reverse()
-                        .map((activity, index) => (
-                          <tr key={index}>
-                            <td>{activity.activityType}</td>
-                            <td>{activity.actionType}</td>
-                            <td>
-                              {new Date(activity.timestamp).toLocaleString()}
-                            </td>
-                          </tr>
-                        ))}
+                      {selectedAdminActivities.map((activity, index) => (
+                        <tr key={index}>
+                          <td>{activity.activityType}</td>
+                          <td>{activity.actionType}</td>
+                          <td>
+                            {new Date(activity.timestamp).toLocaleString()}
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </Modal.Body>
@@ -309,7 +311,7 @@ const Admins = () => {
                 >
                   Close
                 </Button>
-                <Button variant="primary" onClick={handleAddAdmin}>
+                <Button variant="golden" onClick={handleAddAdmin}>
                   Add Admin
                 </Button>
               </Modal.Footer>

@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import Modal from "../Modal";
-import { FaEye, FaPencilAlt, FaSearch, FaTrash } from "react-icons/fa";
+import { FaEye, FaPencilAlt, FaPlus, FaSearch, FaTrash } from "react-icons/fa";
 import adminApis from "../apis/AdminApis";
 import { Link, useParams } from "react-router-dom";
 import ConfirmationModal from "../ConfirmationModal";
 import UserProfileModal from "../UserProfileModal";
 import ToastMessages from "../ToastMessages";
+import Modal from "../Modal";
 import "../Assets/CSS/AdminUsers.css";
 import { AdminContext } from "../context/AdminContext";
 import { GridLoader } from "react-spinners";
@@ -38,10 +38,14 @@ const Users = () => {
   });
 
   useEffect(() => {
+    document.title = "PlayWays Admin - Users";
+  }, []);
+
+  useEffect(() => {
     fetchUsers();
     const interval = setInterval(() => {
       fetchUsers();
-    }, 2000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -233,7 +237,7 @@ const Users = () => {
                   title="Add new user"
                   onClick={openModal}
                 >
-                  Add User
+                  <FaPlus /> Add User
                 </button>
               </div>
             </>
@@ -352,7 +356,7 @@ const Users = () => {
                               </td>
                               <td>{user.IsPrimeUser ? "Yes" : "No"}</td>
                               <td>
-                                <div className="row">
+                                <div className="row justify-content-center">
                                   <div className="col">
                                     <button
                                       className="btn btn-sm btn-transparent mt-1"
@@ -405,6 +409,7 @@ const Users = () => {
 
         {showUserModal && selectedUser && (
           <UserProfileModal
+            show={showUserModal}
             userData={selectedUser}
             onClose={() => setShowUserModal(false)}
           />

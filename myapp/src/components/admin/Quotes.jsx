@@ -6,6 +6,7 @@ import "../Assets/CSS/AdminQuotes.css";
 import ConfirmationModal from "../ConfirmationModal";
 import ToastMessages from "../ToastMessages";
 import { GridLoader } from "react-spinners";
+import { FaPlus } from "react-icons/fa";
 
 const Quotes = () => {
   const { adminId } = useParams();
@@ -24,10 +25,14 @@ const Quotes = () => {
   });
 
   useEffect(() => {
+    document.title = "PlayWays Admin - Quotes";
+  }, []);
+
+  useEffect(() => {
     fetchQuotes();
     const interval = setInterval(() => {
       fetchQuotes();
-    }, 2000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -160,9 +165,10 @@ const Quotes = () => {
       <h1 className="mb-4">Quotes</h1>
       <button
         className="btn btn-golden mb-3"
+        title="Add new Quote"
         onClick={() => setShowModal(true)}
       >
-        Add New Quote
+        <FaPlus /> Add Quote
       </button>
       {loading ? (
         <div

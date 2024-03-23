@@ -138,7 +138,7 @@ const GsTiming = () => {
                 <div className="text-center">
                   <button
                     type="button "
-                    className="btn btn-golden me-2"
+                    className="btn btn-secondary me-2"
                     onClick={() => navigate(`/host/gameStation/${stationId}`)}
                   >
                     Back

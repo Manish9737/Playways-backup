@@ -1,10 +1,10 @@
 // EditProfilePage.js
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import userApis from "../apis/UserApis";
 
 function EditProfilePage() {
+  const { userId } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     userName: "",
@@ -16,17 +16,26 @@ function EditProfilePage() {
     require("../imgs/Profile_avatar4.png")
   );
 
-  const userId = localStorage.getItem("userId");
+  useEffect(() => {
+    document.title = "Play Ways - Edit Profile";
+  }, []);
 
   useEffect(() => {
-    userApis
-      .getUserDetails(userId)
-      .then((response) => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await userApis.getUserDetails(userId);
+        const userDetails = response.data.user;
         setFormData(response.data.user);
-      })
-      .catch((error) => {
-        console.error("Error fetching user data:", error);
-      });
+        if (userDetails.ProfileImg) {
+          setProfilePicPreview(`${process.env.REACT_APP_baseUrl}${userDetails.ProfileImg}`);
+        } else {
+          setProfilePicPreview(require("../imgs/Profile_avatar4.png"));
+        }
+      } catch (error) {
+        console.log("Error in fetching data :", error);
+      }
+    };
+    fetchUserDetails();
   }, [userId]);
 
   const handleInputChange = (e) => {
@@ -43,7 +52,15 @@ function EditProfilePage() {
       ...prevData,
       ProfileImg: file,
     }));
-    setProfilePicPreview(URL.createObjectURL(file));
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePicPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setProfilePicPreview(require("../imgs/Profile_avatar4.png"));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -54,15 +71,8 @@ function EditProfilePage() {
       formDataToSend.append("email", formData.email);
       formDataToSend.append("phone", formData.phone);
       formDataToSend.append("ProfileImg", formData.ProfileImg);
-      const response = await axios.put(
-        `/users/update/${userId}`,
-        formDataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      console.log(formData);
+      const response = await userApis.updateUserDetails(userId, formDataToSend);
       console.log("User data updated:", response.data);
       navigate("/profile");
     } catch (error) {
@@ -71,14 +81,14 @@ function EditProfilePage() {
   };
 
   return (
-    <div className="container">
+    <div className="container mb-5 mt-5">
       <div className="card">
         <div className="card-body">
           <div className="card-header">
             <h1 className="mt-4">Edit Profile</h1>
           </div>
           <form onSubmit={handleSubmit}>
-            <div className="form-group mx-auto text-center ">
+            <div className="form-group mx-auto text-center mt-3">
               <input
                 type="file"
                 name="ProfileImg"
@@ -86,6 +96,7 @@ function EditProfilePage() {
                 className="form-control"
                 style={{ display: "none" }}
                 accept="image/*"
+                multiple={false}
                 onChange={handleFileChange}
               />
               <img
@@ -141,9 +152,12 @@ function EditProfilePage() {
                 onChange={handleInputChange}
               />
             </div>
-            <div className="mt-3">
-              <button type="submit" className="btn btn-primary">
-                Save Changes
+            <div className="mt-3 text-center">
+              <button type="button" className="btn btn-secondary me-2" onClick={() => navigate("/profile")}>
+                Back
+              </button>
+              <button type="submit" className="btn btn-golden">
+                Update
               </button>
             </div>
           </form>

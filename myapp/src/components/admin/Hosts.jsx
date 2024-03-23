@@ -23,6 +23,10 @@ const Hosts = () => {
   });
 
   useEffect(() => {
+    document.title = "PlayWays Admin - Hosts";
+  }, []);
+
+  useEffect(() => {
     const fetchHosts = async () => {
       try {
         const response = await adminApis.fetchHosts();
@@ -48,7 +52,7 @@ const Hosts = () => {
 
     fetchHosts();
 
-    const interval = setInterval(fetchHosts, 2000);
+    const interval = setInterval(fetchHosts, 5000);
     return () => clearInterval(interval);
   }, []);
 

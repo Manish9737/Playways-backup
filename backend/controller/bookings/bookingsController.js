@@ -1,12 +1,16 @@
 const Booking = require("../../model/bookingSchema");
+const Slot = require("../../model/slotsSchema");
+const GameStation = require("../../model/gsSchema");
+const Game = require("../../model/gameSchema");
 
 const addBooking = async (req, res, next) => {
+  const { gameStationId } = req.params;
+  const { userId, slotDate, slotTiming, duration, game } = req.body;
   try {
-    const { userId, slotDateTime, duration, game, gameStationId } = req.body;
-
     const newBooking = new Booking({
       userId,
-      slotDateTime,
+      slotDate,
+      slotTiming,
       duration,
       game,
       gameStationId,
@@ -30,7 +34,9 @@ const addBooking = async (req, res, next) => {
 
 const allBookings = async (req, res, next) => {
   try {
-    const bookings = await Booking.find().populate('userId').populate('gameStationId');;
+    const bookings = await Booking.find()
+      .populate("userId")
+      .populate("gameStationId");
 
     res.status(200).json({ bookings });
   } catch (error) {

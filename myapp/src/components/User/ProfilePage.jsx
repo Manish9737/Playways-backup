@@ -1,153 +1,168 @@
-// ProfilePage.js
-import React, { useContext } from "react";
-import {
-  FaBirthdayCake,
-  FaPhoneAlt,
-  FaCalendar,
-  FaAddressCard,
-  FaAt,
-  FaVenusMars,
-} from "react-icons/fa";
-// import axios from "axios";
-import { UserContext } from "../context/UserContext";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import userApis from "../apis/UserApis";
+import { FaEllipsisV } from "react-icons/fa";
 
 function ProfilePage() {
+  const [user, setUser] = useState();
+  const [activeTab, setActiveTab] = useState("Profile");
+  const [showOptions, setShowOptions] = useState(false);
   const userId = localStorage.getItem("userId");
-  
 
+  useEffect(() => {
+    document.title = "Play Ways - Profile";
+  }, []);
 
-  const { user } = useContext(UserContext);
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await userApis.getUserDetails(userId);
+        setUser(response.data.user);
+      } catch (error) {
+        console.log("Error in fetching data :", error);
+      }
+    };
+    fetchUserDetails();
+  }, [userId]);
+
+  const handleTabClick = (tabName) => {
+    setActiveTab(tabName);
+  };
+
+  const handleOptionsClick = () => {
+    setShowOptions(!showOptions);
+  };
 
   return (
-    <div className="container-fluid" id="bg">
-      <div className="bg-image m-4 card shadow bg-golden" >
-        <h2
-          className="mb-4 display-5 text-center text-white "
-        >
-          User Details
-        </h2>
-
-        <div className="">
-          <div className="">
-            <div className="row m-2">
-              <div className="col-md-4  d-flex justify-content-center align-items-center">
-                <div className="mb-5 d-flex align-items-center justify-content-center imgg p-2">
-                  <img
-                    src={
-                      user?.ProfileImg || require("../imgs/Profile_avatar4.png")
-                    }
-                    alt="User"
-                    className="img-fluid rounded-circle ratio ratio-1x1 object-fit-cover shadow "
-                    // width={window.innerWidth < 768 ? "150" : "200"}
-                  />
-                </div>
-              </div>
-              <div className="col-md-8 ">
-                <div className=" p-3">
-                  <div className="">
-                    <div className="mb-5">
-                      <h2
-                        className="fs-1"
-                        // style={{ fontFamily: "joseph" }}
-                      >
-                        {user?.userName || "User"}
-                      </h2>
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="phone" className="form-label">
-                        <FaAt style={{ fontSize: "30px" }} /> :{" "}
-                        {user?.email || "Email"}
-                      </label>
-                      {/* <input
-              type="text"
-              id="phone"
-              className="form-control"
-              value={userData.phone || ""}
-              readOnly
-            /> */}
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="phone" className="form-label">
-                        <FaPhoneAlt style={{ fontSize: "30px" }} /> :{" "}
-                        {user?.phone || "Phone"}
-                      </label>
-                      {/* <input
-              type="text"
-              id="phone"
-              className="form-control"
-              value={userData.phone || ""}
-              readOnly
-            /> */}
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="birthdate" className="form-label">
-                        <FaBirthdayCake style={{ fontSize: "30px" }} /> :{" "}
-                        {user?.birthdate || "24-12-2003"}
-                      </label>
-                      {/* <input
-              type="text"
-              id="birthdate"
-              className="form-control"
-              value={userData.birthdate || ""}
-              readOnly
-            /> */}
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="age" className="form-label">
-                        <FaCalendar style={{ fontSize: "30px" }} /> :{" "}
-                        {user?.age || "20"}
-                      </label>
-                      {/* <input
-            type="text"
-            id="age"
-            className="form-control"
-            value={userData.age || ""}
-            readOnly
-          /> */}
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="address" className="form-label">
-                        <FaAddressCard style={{ fontSize: "30px" }} /> :{" "}
-                        {user?.address || "Address"}
-                      </label>
-                      {/* <textarea
-              id="address" 
-              className="form-control"
-              value={userData.address || ""}
-              readOnly
-            ></textarea> */}
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="gender" className="form-label">
-                        <FaVenusMars style={{ fontSize: "30px" }} /> :{" "}
-                        {user?.gender || "Gender"}
-                      </label>
-                      {/* <input
-              type="text"
-              id="age"
-              className="form-control"
-              value={userData.gender || ""}
-              readOnly
-            /> */}
-                    </div>
-
-                    <div className="text-center mx-auto">
-                      <Link
-                        to={`/edit-profile/${userId}`}
-                        className="btn btn-light"
-                      >
-                        Edit Profile
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    <div className="container-fluid px-md-5 bg-User" id="profile">
+      <div className="">
+        <div className="row justify-content-center align-items-center d-flex flex-column p-5">
+          <div className="col-md-3 justify-content-center">
+            <div className="text-center">
+              <img
+                src={
+                  user?.ProfileImg
+                    ? `${process.env.REACT_APP_baseUrl}${user.ProfileImg}`
+                    : require("../imgs/Profile_avatar4.png").default
+                }
+                alt="User"
+                className="img-fluid rounded-circle ratio object-fit-cover shadow-lg  bg-light"
+                style={{
+                  aspectRatio: "1/1",
+                  objectFit: "cover",
+                  maxWidth: "250px",
+                  minWidth: "250px",
+                  minHeight: "250px",
+                }}
+              />
+            </div>
+            <div className="text-center mt-3">
+              <h2 className=" m-0">{user?.userName || "User"}</h2>{" "}
             </div>
           </div>
         </div>
       </div>
-
+      <div className="row">
+        <div className="col-md-12">
+          <div className=" card shadow mb-5 m-0 p-0">
+            <div className="menu">
+              <ul className="nav nav-tabs justify-content-center mt-1">
+                <li className="nav-item">
+                  <Link
+                    to="/profile"
+                    className={`nav-link ${
+                      activeTab === "Profile" && "active"
+                    }`}
+                    onClick={() => handleTabClick("Profile")}
+                  >
+                    Profile
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    to="/profile"
+                    className={`nav-link ${
+                      activeTab === "History" && "active"
+                    }`}
+                    onClick={() => handleTabClick("History")}
+                  >
+                    History
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div className="content mt-md-2 p-md-4">
+              {activeTab === "Profile" && (
+                <div className="profile-content mt-md-2 p-md-4 p-3">
+                  <div className="row justify-content-center">
+                    <div className="col-md-8">
+                      <div className="card bg-info bg-opacity-10 mt-md-1">
+                        <div className="card-body">
+                          <div className="row justify-content-end ">
+                            <div className="text-end position-relative">
+                              <FaEllipsisV
+                                onClick={handleOptionsClick}
+                                style={{ cursor: "pointer" }}
+                              />
+                              {showOptions && (
+                                <div className="options-dropdown bg-light">
+                                  <ul className="options-menu position-absolute list-unstyled text-center">
+                                    <li>
+                                      <Link
+                                        to={`/edit-profile/${userId}`}
+                                        className="btn w-100"
+                                      >
+                                        Update Profile
+                                      </Link>
+                                    </li>
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <h4 className="card-title">Profile Information</h4>
+                          <p className="card-text">
+                            <strong>Name:</strong>{" "}
+                            {user?.userName || "User name"}
+                          </p>
+                          <p className="card-text">
+                            <strong>Email:</strong>{" "}
+                            {user?.email || "email@gmail.com"}
+                          </p>
+                          <p className="card-text">
+                            <strong>Phone:</strong>{" "}
+                            {user?.phone || "123-456-7890"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {activeTab === "History" && (
+                <div className="History-content mt-md-2 p-md-4 p-3">
+                  <div className="row justify-content-center">
+                    <div className="col-md-8">
+                      <div className="card bg-secondary bg-opacity-25 mt-md-1">
+                        <div className="card-body">
+                          <h4 className="card-title">Match 1</h4>
+                          <p className="card-text">02/01/2024</p>
+                        </div>
+                      </div>
+                      <div className="card bg-secondary bg-opacity-25 mt-1">
+                        <div className="card-body">
+                          <h4 className="card-title">Match 2</h4>
+                          <p className="card-text">02/12/2023</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

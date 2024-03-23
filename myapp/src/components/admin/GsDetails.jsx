@@ -36,8 +36,12 @@ const GsDetails = () => {
   });
 
   useEffect(() => {
+    document.title = "PlayWays Admin - Gamestations";
+  }, []);
+
+  useEffect(() => {
     fetchGameStations();
-    const interval = setInterval(fetchGameStations, 2000);
+    const interval = setInterval(fetchGameStations, 5000);
 
     return () => clearInterval(interval);
   }, []);

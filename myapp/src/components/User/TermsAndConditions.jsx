@@ -3,7 +3,7 @@ import React from "react";
 const TermsAndConditions = () => {
   return (
     <div className="container py-5">
-      <p className="text-center mb-5 display-4">PlayWays Web Terms and Conditions</p>
+      <p className="text-center mb-5 display-4 text-golden">PlayWays Web Terms and Conditions</p>
       <hr/>
       <div className="row mt-5">
         <div className="col-md-8 offset-md-2">

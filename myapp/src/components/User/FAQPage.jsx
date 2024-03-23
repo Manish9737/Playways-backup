@@ -1,98 +1,58 @@
-import React from "react";
+import React, { useState } from "react";
+import { FAQs } from "./FAQs";
+import { Link } from "react-router-dom";
 
 const FAQPage = () => {
+  const [openIndex, setOpenIndex] = useState(0);
+
+  const toggleAccordion = (index) => {
+    setOpenIndex((prevIndex) => (prevIndex === index ? -1 : index));
+  };
+
   return (
     <>
-      <div className="bg-warning" style={{minHeight:"100vh"}}>
+      <div className="bg-warning bg-opacity-10" style={{ minHeight: "100vh" }}>
         <div className="container py-5">
           <h1 className="text-center mb-4">Frequently Asked Questions</h1>
           <div className="accordion" id="faqAccordion">
-            <div className="accordion-item">
-              <h2 className="accordion-header" id="headingOne">
-                <button
-                  className="accordion-button collapsed"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseOne"
-                  aria-expanded="true"
-                  aria-controls="collapseOne"
+            {FAQs.map((faq, index) => (
+              <div className="accordion-item" key={index}>
+                <h2
+                  className="accordion-header"
+                  id={`heading${index}`}
+                  onClick={() => toggleAccordion(index)}
                 >
-                  Question 1: What is Lorem Ipsum?
-                </button>
-              </h2>
-              <div
-                id="collapseOne"
-                className="accordion-collapse collapse"
-                aria-labelledby="headingOne"
-                data-bs-parent="#faqAccordion"
-              >
-                <div className="accordion-body">
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                    cursus ante dapibus diam. Integer ac ligula fermentum,
-                    ullamcorper nulla nec, blandit nisi.
-                  </p>
+                  <button
+                    className={`accordion-button ${
+                      openIndex === index ? "" : "collapsed"
+                    }`}
+                    type="button"
+                    aria-expanded={openIndex === index ? "true" : "false"}
+                    aria-controls={`collapse${index}`}
+                  >
+                    {faq.question}
+                  </button>
+                </h2>
+                <div
+                  id={`collapse${index}`}
+                  className={`accordion-collapse collapse ${
+                    openIndex === index ? "show" : ""
+                  }`}
+                  aria-labelledby={`heading${index}`}
+                  data-bs-parent="#faqAccordion"
+                >
+                  <div className="accordion-body">
+                    <p>{faq.answer}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="accordion-item">
-              <h2 className="accordion-header" id="headingTwo">
-                <button
-                  className="accordion-button collapsed"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseTwo"
-                  aria-expanded="false"
-                  aria-controls="collapseTwo"
-                >
-                  Question 2: Why do we use it?
-                </button>
-              </h2>
-              <div
-                id="collapseTwo"
-                className="accordion-collapse collapse"
-                aria-labelledby="headingTwo"
-                data-bs-parent="#faqAccordion"
-              >
-                <div className="accordion-body">
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                    cursus ante dapibus diam. Integer ac ligula fermentum,
-                    ullamcorper nulla nec, blandit nisi.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="accordion-item">
-              <h2 className="accordion-header" id="headingThree">
-                <button
-                  className="accordion-button collapsed"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseThree"
-                  aria-expanded="false"
-                  aria-controls="collapseThree"
-                >
-                  Question 2: Why do we use it?
-                </button>
-              </h2>
-              <div
-                id="collapseThree"
-                className="accordion-collapse collapse"
-                aria-labelledby="headingThree"
-                data-bs-parent="#faqAccordion"
-              >
-                <div className="accordion-body">
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                    cursus ante dapibus diam. Integer ac ligula fermentum,
-                    ullamcorper nulla nec, blandit nisi.
-                  </p>
-                </div>
-              </div>
-            </div>
-            {/* Add more FAQ items following the same structure */}
+            ))}
           </div>
+
+          <h4 className="text-center mt-5">
+            For more questions, contact us via email:{" "}
+            <Link to="mailto:playways83@gmail.com">playways83@gmail.com</Link>
+          </h4>
         </div>
       </div>
     </>

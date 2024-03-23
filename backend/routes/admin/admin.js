@@ -50,6 +50,7 @@ const {
 } = require("../../controller/admin/adminController");
 const { checkSuperUser } = require("../../middlewares/adminAuth");
 const upload = require("../../middlewares/singleFileUpload");
+const { getAllBlogs, createBlog, updateBlog, deleteBlog } = require("../../controller/Blog/blogsContoller");
 
 router.post("/register", registerAdmin); // Register new Admin
 router.post("/login", loginAdmin); // Login Admin
@@ -88,6 +89,11 @@ router.get("/hosts", allHosts);
 router.post("/hosts/:adminId/add", checkSuperUser, addHost);
 router.put("/hosts/:adminId/update/:hostId", updateHost);
 router.delete("/hosts/:adminId/delete/:hostId", checkSuperUser, deleteHost);
+
+router.get("/blogs", getAllBlogs);
+router.post("/blogs/:adminId/add", upload("images").single("image"),createBlog);
+router.put("/blogs/:adminId/update/:id", upload("images").single("image"), updateBlog);
+router.delete("/blogs/:adminId/delete/:id", deleteBlog);
 
 router.get("/gameStations", allGameStations);
 router.post("/gameStations/:adminId/add",upload("images").single("gsLogo"), addGameStation);

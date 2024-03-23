@@ -27,6 +27,10 @@ const AdminLogin = () => {
     await login(email, password);
   };
 
+  useEffect(() => {
+    document.title = "PlayWays Admin - Login";
+  }, []);
+
   return (
     <>
       <div className="bg bg-opacity-25">
@@ -42,9 +46,6 @@ const AdminLogin = () => {
                 </h1>
 
                 {error && <div className="alert alert-danger">{error}</div>}
-                {/* {successMessage && (
-                  <p className="alert alert-success">{successMessage}</p>
-                )} */}
 
                 <label htmlFor="email" className="input-label mb-2">
                   Email

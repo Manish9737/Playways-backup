@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "../Modal";
 import adminApis from "../apis/AdminApis";
-import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import { FaPencilAlt, FaPlus, FaTrash } from "react-icons/fa";
 import { Link, useParams } from "react-router-dom";
 import ConfirmationModal from "../ConfirmationModal";
 import ToastMessages from "../ToastMessages";
@@ -40,8 +40,12 @@ const Games = () => {
 
     fetchGames();
 
-    const interval = setInterval(fetchGames, 2000);
+    const interval = setInterval(fetchGames, 5000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    document.title = "PlayWays Admin - Games";
   }, []);
 
   const handleFileChange = (e) => {
@@ -207,7 +211,7 @@ const Games = () => {
             className="btn btn-golden mb-2"
             onClick={() => setShowModal(true)}
           >
-            Add
+            <FaPlus /> Add Game
           </button>
         </div>
         {loading ? (
@@ -232,10 +236,6 @@ const Games = () => {
                   />
                   <div className="card-body">
                     <h4 className="card-title">{game.name}</h4>
-                    {/* <p className="card-text">{game.description}</p>
-                  <p className="card-text">Type: {game.type}</p>
-                  <p className="card-text">Timing: {game.timing}</p>
-                  <p className="card-text">Slot Price: {game.slotPrice}</p> */}
                   </div>
                   <div className="card-footer">
                     <div className="d-flex justify-content-around">

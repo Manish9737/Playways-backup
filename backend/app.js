@@ -1,3 +1,5 @@
+const http = require('http');
+
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -6,6 +8,7 @@ var logger = require("morgan");
 var cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
+const socketIO = require('socket.io');
 
 var indexRouter = require("./routes/index/index");
 var usersRouter = require("./routes/users/users");
@@ -17,12 +20,16 @@ var bookingsRouter = require("./routes/bookings/bookings");
 var gamesRouter = require("./routes/games/games");
 var feedbackRouter = require("./routes/feedback/feedback")
 var blogRouter = require("./routes/blog/blog");
+var slotRouter = require("./routes/slots/slots");
+const { sendMessage, createRoom } = require("./services/roomService");
 
 require("./DB/conn");
 
 require("./middlewares/passportConfig");
 
 var app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
 
 app.use(
   session({
@@ -30,14 +37,6 @@ app.use(
     saveUninitialized: false,
   })
 );
-
-// app.use(
-//   cookieSession({
-//     name:'session',
-//     keys:['cyberwolve'],
-//     maxAge:24 * 60 * 60 * 1000,
-//   })
-// )
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -50,10 +49,8 @@ const corsOptions = {
 };
 
 // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
-// app.set('view engine', 'ejs');
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -73,21 +70,64 @@ app.use("/bookings", bookingsRouter);
 app.use("/games", gamesRouter);
 app.use("/feedback", feedbackRouter);
 app.use("/blogs", blogRouter);
+app.use("/slots", slotRouter);
 
-// catch 404 and forward to error handler
+
+io.on('connection', socket => {
+  console.log('New client connected');
+
+  socket.on('sendMessage', async ({ roomId, senderId, messageContent }) => {
+    try {
+      const room = await sendMessage(roomId, senderId, messageContent);
+
+      io.emit('roomUpdated', room);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  });
+
+  socket.on('getChatHistory', async ({ roomId }) => {
+    try {
+      const chatHistory = []; 
+
+      socket.emit('chatHistory', chatHistory);
+    } catch (error) {
+      console.error('Error retrieving chat history:', error);
+    }
+  });
+
+  socket.on('createRoom', async ({ roomId, userId, hostId }) => {
+    try {
+      const room = await createRoom(roomId, userId, hostId);
+
+      io.emit('roomCreated', room);
+    } catch (error) {
+      console.error('Error creating room:', error);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
+});
+
+
+
 app.use(function (req, res, next) {
   next(createError(404));
 });
 
-// error handler
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
   res.status(err.status || 500);
   res.render("error");
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Socket server running on port ${PORT}`);
 });
 
 module.exports = app;

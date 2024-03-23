@@ -1,7 +1,9 @@
 const nodemailer = require("nodemailer");
+const path = require("path");
 
 const sendEmail = async (to, subject, content) => {
   try {
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -11,7 +13,7 @@ const sendEmail = async (to, subject, content) => {
     });
 
     const mailOptions = {
-      from: process.env.Email,
+      from: '"Playways" <' + process.env.Email + ">",
       to,
       subject,
       html: content,

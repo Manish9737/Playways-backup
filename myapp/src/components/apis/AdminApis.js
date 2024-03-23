@@ -67,6 +67,20 @@ const adminApis = {
   // Feedback
   getAllFeedback: () => axiosInstance.get(`/feedback/get`),
 
+  // Blogs
+  getAllBlogs: () => axiosInstance.get(`/admin/blogs`),
+  createBlog: (adminId, blogsData) => axiosInstance.post(`/admin/blogs/${adminId}/add`, blogsData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    }
+  }),
+  updateBlog: (adminId, blogId, blogsData) => axiosInstance.put(`/admin/blogs/${adminId}/update/${blogId}`, blogsData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    }
+  }),
+  deleteBlog: (adminId, blogId) => axiosInstance.put(`/admin/blogs/${adminId}/delete/${blogId}`),
+
 };
 
 export default adminApis;

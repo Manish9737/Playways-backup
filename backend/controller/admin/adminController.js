@@ -119,6 +119,12 @@ const sendEmailbyAdmin = async (req, res, next) => {
   try {
     const { to, subject, content } = req.body;
 
+    if (!to || !subject || !content) {
+      return res
+        .status(422)
+        .json({ error: "Please fill the fields properly.", success: false });
+    }
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -143,6 +149,7 @@ const sendEmailbyAdmin = async (req, res, next) => {
     });
 
     await activity.save();
+
     res.status(200).json({ message: "Email sent successfully" });
   } catch (error) {
     console.error("Error sending email:", error);
@@ -256,7 +263,7 @@ const getRecentActivities = async (req, res, next) => {
     }
 
     const recentActivities = await Activity.find({ adminId: adminId })
-      .sort({ createdAt: -1 })
+      .sort({ timestamp: -1 })
       .limit(10);
 
     res.status(200).json({ activities: recentActivities });
@@ -997,9 +1004,7 @@ const getAllGsByHostId = async (req, res, next) => {
       return res.status(404).json({ error: "Host not found.", success: false });
     }
 
-    const gameStations = await GameStation.find({ host: id }).select(
-      "-host"
-    );
+    const gameStations = await GameStation.find({ host: id }).select("-host");
 
     const gameStationsWithImages = gameStations.map((station) => {
       return {

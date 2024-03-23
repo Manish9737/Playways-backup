@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 const FeedbackPage = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,15 +25,23 @@ const FeedbackPage = () => {
       setSuccess("Feedback submitted successfully");
       setError("");
       setFormData({ name: "", email: "", message: "" });
+      setSubmitted(true);
+      setTimeout(() => {
+        setSuccess("");
+        setSubmitted(false);
+      }, 3000);
     } catch (error) {
       console.error(error);
       setError("An error occurred while submitting feedback");
       setSuccess("");
+      setTimeout(() => {
+        setError("");
+      }, 3000);
     }
   };
 
   useEffect(() => {
-    document.title = "Play Ways - Feedback"; 
+    document.title = "Play Ways - Feedback";
   }, []);
 
   return (
@@ -52,12 +61,12 @@ const FeedbackPage = () => {
         />
         <div className="position-absolute top-50 start-50 translate-middle text-center">
           <h1
-            className="text-white text-lg text-sm text-xs responsive-text"
+            className="text-white text-lg text-sm text-xs responsive-text animate__animated animate__fadeInDown"
             style={{ fontSize: "60px", fontFamily: "satisfya" }}
           >
             Feedback Page
           </h1>
-          <p className="text-white mt-4">
+          <p className="text-white mt-4 animate__animated animate__fadeInDown">
             We value your feedback! Please let us know how we can improve our
             services.
           </p>
@@ -85,105 +94,99 @@ const FeedbackPage = () => {
 
       {/* Feedback Form */}
       <div className="container py-5">
-        <div className="row justify-content-center">
-          <div className="col-md-7 mb-3  d-flex justify-content-center align-items-center">
-            <div className="card border-0 animate__animated animate__fadeInDown w-100">
-              <div className="card-body">
-                <div className="row">
-                  <h1 className="text-center mb-4">Feedback Form</h1>
-                  <div className="p-3">
-                    {error && (
-                      <div
-                        className="alert alert-danger alert-dismissible mt-2"
-                        role="alert"
-                      >
-                        {error}
-                        <button
-                          type="button"
-                          className="btn-close"
-                          data-bs-dismiss="alert"
-                          aria-label="Close"
-                          onClick={() => setError("")}
-                        ></button>
-                      </div>
-                    )}
-                    {success && (
-                      <div
-                        className="alert alert-success alert-dismissible mt-2"
-                        role="alert"
-                      >
-                        {success}
-                        <button
-                          type="button"
-                          className="btn-close"
-                          data-bs-dismiss="alert"
-                          aria-label="Close"
-                          onClick={() => setSuccess("")}
-                        ></button>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="col-md-12">
-                    <form onSubmit={handleSubmit}>
-                      <div className="mb-3">
-                        <label htmlFor="name" className="form-label">
-                          Your Name
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="name"
-                          name="name"
-                          value={name}
-                          onChange={handleChange}
-                          placeholder="Your Name"
-                          required
-                        />
-                      </div>
-                      <div className="mb-3">
-                        <label htmlFor="email" className="form-label">
-                          Your Email
-                        </label>
-                        <input
-                          type="email"
-                          className="form-control"
-                          id="email"
-                          name="email"
-                          value={email}
-                          onChange={handleChange}
-                          placeholder="Your Email"
-                          required
-                        />
-                      </div>
-                      <div className="mb-3">
-                        <label htmlFor="message" className="form-label">
-                          Your Feedback
-                        </label>
-                        <textarea
-                          className="form-control"
-                          id="message"
-                          name="message"
-                          value={message}
-                          onChange={handleChange}
-                          placeholder="Your Feedback"
-                          required
-                        ></textarea>
-                      </div>
-                      <div className="text-center mt-4">
-                        <button type="submit" className="btn btn-golden">
-                          Submit Feedback
-                        </button>
-                      </div>
-                    </form>
+        {submitted ? (
+          <div className="row justify-content-center">
+            <div className="col-md-7 mb-3 d-flex justify-content-center align-items-center " style={{minHeight: "70vh"}}>
+              <div className="card border-0 w-100 h-100">
+                <div className="card-body d-flex align-items-center justify-content-center">
+                  <div className="alert alert-success" role="alert">
+                    {success}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="row justify-content-center">
+            <div className="col-md-7 mb-3 d-flex justify-content-center align-items-center">
+              <div className="card border-0 w-100">
+                <div className="card-body">
+                  <div className="row">
+                    <h1 className="text-center mb-4">Feedback Form</h1>
+                    <div className="p-3">
+                      {error && (
+                        <div className="alert alert-danger mt-2" role="alert">
+                          {error}
+                        </div>
+                      )}
+                      {success && (
+                        <div className="alert alert-success mt-2" role="alert">
+                          {success}
+                        </div>
+                      )}
+                    </div>
 
-        <div className="row mt-3 animate__animated animate__fadeInDown animate__delay-1s">
+                    <div className="col-md-12">
+                      <form onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                          <label htmlFor="name" className="form-label">
+                            Your Name
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="name"
+                            name="name"
+                            value={name}
+                            onChange={handleChange}
+                            placeholder="Your Name"
+                            required
+                          />
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor="email" className="form-label">
+                            Your Email
+                          </label>
+                          <input
+                            type="email"
+                            className="form-control"
+                            id="email"
+                            name="email"
+                            value={email}
+                            onChange={handleChange}
+                            placeholder="Your Email"
+                            required
+                          />
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor="message" className="form-label">
+                            Your Feedback
+                          </label>
+                          <textarea
+                            className="form-control"
+                            id="message"
+                            name="message"
+                            value={message}
+                            onChange={handleChange}
+                            placeholder="Your Feedback"
+                            required
+                          ></textarea>
+                        </div>
+                        <div className="text-center mt-4">
+                          <button type="submit" className="btn btn-golden">
+                            Submit Feedback
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="row mt-3 ">
           <div className="col-md-6 d-flex align-items-center justify-content-center ">
             <div className="text-start">
               <p>

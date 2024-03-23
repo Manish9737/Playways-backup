@@ -21,6 +21,10 @@ const {
   getGamesOfGs,
   getAllBookingsByGsId,
   updateOpeningClosingTime,
+  getStationSlots,
+  getSlotsbyGsid,
+  getGameByIdFromGs,
+  getSlotsByStationIdGameIdDate,
   // generateGameSlots,
 } = require("../../controller/gameStation/gameStationController");
 
@@ -59,8 +63,13 @@ router.get("/:stationId/bookings", getAllBookingsByGsId);  // get all games asso
 
 router.put("/timing/:id", updateOpeningClosingTime); // Route to update a gs timeopening and closing or closed days
 
-// router.get("/:gameStationId/generate", generateGameSlots); // Route to update a gs timeopening and closing or closed days
+router.get("/:gsid/slots/:gameid/:date", getStationSlots);  // get all slots of gs with date
 
+router.get("/:gsid/slots", getSlotsbyGsid);  // get slot by gsid
+
+router.get("/:stationId/:gameId/game", getGameByIdFromGs);  // get game data by gsid, gameId
+
+router.get("/:stationId/:gameId/:date/slots", getSlotsByStationIdGameIdDate);  // get game data by gsid, gameId
 
 
 module.exports = router;  

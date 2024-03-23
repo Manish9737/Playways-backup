@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
 const User = require("../../model/userSchema");
 const GameStation = require("../../model/gsSchema");
+const Booking = require("../../model/bookingSchema");
+const Game = require("../../model/gameSchema");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../../Email/email");
+const ViewedGameStation = require("../../model/viewedGameStation");
 
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000);
@@ -120,7 +123,7 @@ const registerUser = async (req, res, next) => {
         <hr>
         <p>For Support, <a href="http://localhost:3000/contact">Click here</a></p>
       `;
-      
+
       await sendEmail(email, subject, content);
 
       console.log("User is Registered");
@@ -219,16 +222,20 @@ const updateProfile = async (req, res) => {
         .status(404)
         .json({ message: "User not found", success: false });
     }
+    
+    const updatedFields = {};
 
-    user.userName = req.body.userName || user.userName;
-    user.email = req.body.email || user.email;
-    user.phone = req.body.phone || user.phone;
+    if (req.body.userName) updatedFields.userName = req.body.userName;
+    if (req.body.email) updatedFields.email = req.body.email;
+    if (req.body.phone) updatedFields.phone = req.body.phone;
 
     if (req.file) {
       const imgFileName = req.file.filename;
       const imgPath = `/images/${imgFileName}`;
-      user.ProfileImg = imgPath;
+      updatedFields.ProfileImg = imgPath;
     }
+
+    Object.assign(user, updatedFields);
 
     const updatedUser = await user.save();
 
@@ -442,17 +449,23 @@ const contactUs = async (req, res, next) => {
   try {
     const { name, email, subject, message } = req.body;
 
+    if (!name || !email || !subject || !message) {
+      return res
+        .status(422)
+        .json({ error: "Please fill the fields properly.", success: false });
+    }
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.Email, 
-        pass: process.env.PassWordEmail, 
+        user: process.env.Email,
+        pass: process.env.PassWordEmail,
       },
     });
 
     const mailOptions = {
       from: "PlayWays <" + process.env.Email + ">",
-      to: "parth.pics09@gmail.com", 
+      to: "parth.pics09@gmail.com",
       subject: subject,
       text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
     };
@@ -475,7 +488,7 @@ const contactUs = async (req, res, next) => {
 
 const findGameStationById = async (req, res) => {
   try {
-    const { id } = req.params; 
+    const { id, userId } = req.params;
 
     const gameStation = await GameStation.findById(id);
 
@@ -483,7 +496,15 @@ const findGameStationById = async (req, res) => {
       return res.status(404).json({ message: "Game station not found" });
     }
 
-    await GameStation.findByIdAndUpdate(id, { $inc: { viewers: 1 } });
+    const viewedRecord = await ViewedGameStation.findOne({
+      userId,
+      gameStationId: id,
+    });
+
+    if (!viewedRecord) {
+      await GameStation.findByIdAndUpdate(id, { $inc: { viewers: 1 } });
+      await ViewedGameStation.create({ userId, gameStationId: id });
+    }
 
     res.status(200).json({ message: "Game station found", gameStation });
   } catch (error) {
@@ -491,6 +512,24 @@ const findGameStationById = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+const getAllBookingsByUserId = async (req, res, next) => {
+  const userId = req.params.userId;
+
+  try {
+    const bookings = await Booking.find({ userId }).populate("game");
+
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json({ message: "No bookings found for this user", success: false });
+    }
+
+    return res.status(200).json({ bookings, success: true });
+  } catch (error) {
+    console.error("Error fetching bookings by userId:", error);
+    return res.status(500).json({ message: "Internal server error", success: false });
+  }
+};
+
 
 module.exports = {
   registerUser,
@@ -506,5 +545,6 @@ module.exports = {
   generateOTP,
   sendOTP,
   contactUs,
-  findGameStationById
+  findGameStationById,
+  getAllBookingsByUserId
 };

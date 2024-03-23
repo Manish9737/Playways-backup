@@ -10,8 +10,8 @@ const HostResetPassword = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const otp = localStorage.getItem("otp");
-  const email = localStorage.getItem("email");
+  const otp = localStorage.getItem("hostOtp");
+  const email = localStorage.getItem("hostEmail");
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -34,6 +34,9 @@ const HostResetPassword = () => {
         setSuccessMessage(response.data.message);
         setErrorMessage("");
         navigate("/host/login");
+
+        localStorage.removeItem("hostEmail");
+        localStorage.removeItem("hostOtp");
       } else {
         setErrorMessage(response.data.error);
         setSuccessMessage("");

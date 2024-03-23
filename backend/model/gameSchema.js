@@ -11,24 +11,6 @@ const gameSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    // type: {
-    //   type: String,
-    //   required: true,
-    //   trim: true,
-    // },
-    // timing: {
-    //   type: Number,
-    //   required: true,
-    // },
-    // description: {
-    //   type: String,
-    //   trim: true,
-    // },
-    // slotPrice: {
-    //   type: String,
-    //   required: true,
-    //   trim: true,
-    // },
   },
   { timestamps: true }
 );

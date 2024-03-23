@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate, Link } from "react-router-dom";
 import userApis from "../apis/UserApis";
+import { UserContext } from "../context/UserContext";
 
 const Login = () => {
+  const { setUser, setIsAuthenticated } = useContext(UserContext);
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -15,6 +17,14 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+
+    if (userId) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -86,12 +96,15 @@ const Login = () => {
         const response = await userApis.login(emailOrPhone, password);
 
         if (response.status === 200) {
-          const userId = response.data.user._id;
-          localStorage.setItem("userId", userId);
+          const userData = response.data.user;
+          setUser(userData);
+          setIsAuthenticated(true);
+          localStorage.setItem("userId", userData._id);
           setSuccessMessage(response.data.message);
           setErrorMessage("");
           navigate("/");
         } else {
+          setIsAuthenticated(false);
           if (response.status === 401) {
             setErrorMessage("Invalid email or password. Please try again.");
           } else {
@@ -101,6 +114,7 @@ const Login = () => {
           }
         }
       } catch (error) {
+        setIsAuthenticated(false);
         console.error("Login failed:", error.message);
         setErrorMessage(
           "An error occurred while logging in. Please try again."
@@ -122,8 +136,8 @@ const Login = () => {
     <>
       <section className="">
         <div
-          className="px-4 py-5 px-md-5 text-center text-lg-start"
-          style={{ backgroundColor: "hsl(0, 0%, 96%)" }}
+          className="px-4 py-5 px-md-5 text-center text-lg-start d-flex align-items-center"
+          style={{ backgroundColor: "hsl(0, 0%, 96%)", minHeight: "100vh" }}
         >
           <div className="container">
             <div className="row gx-lg-5 align-items-center ">
@@ -132,11 +146,11 @@ const Login = () => {
                   src={require("../imgs/Logo1.png")}
                   alt="Logo"
                   id="logo"
-                  className="mx-auto img-fluid "
+                  className="mx-auto img-fluid mb-3"
                   style={{ width: "50%" }}
                 />
                 <p className="h5 text-start mt-2">{randomQuote}</p>
-                <h2 className="text-end h5 text-secondary">
+                <h2 className="text-end h5 mt-1 text-secondary">
                   - {randomQuoteAuthor}
                 </h2>
               </div>
@@ -151,7 +165,6 @@ const Login = () => {
                       Log In
                     </h2>
 
-                    {/* error & success msg */}
                     {errorMessage && (
                       <div className="alert alert-danger ">{errorMessage}</div>
                     )}
@@ -161,9 +174,7 @@ const Login = () => {
                       </p>
                     )}
 
-                    {/* form */}
                     <form className="" onSubmit={handleLogin}>
-                      {/* Email input */}
                       <div className="form-outline mb-4">
                         <label className="form-label" htmlFor="email">
                           Email address
@@ -181,7 +192,6 @@ const Login = () => {
                         />
                       </div>
 
-                      {/* Password input */}
                       <div className="form-outline mb-4">
                         <label className="form-label" htmlFor="form3Example4">
                           Password
@@ -214,7 +224,6 @@ const Login = () => {
                         </label>
                       </div>
 
-                      {/* Submit button */}
                       <div className="text-center">
                         <button
                           type="submit"
@@ -225,55 +234,20 @@ const Login = () => {
                         </button>
                       </div>
 
-                      {/* Register buttons */}
-                      <div className="text-center mb-">
-                        <p className="hrline">or</p>
-                        <div className="d-flex justify-content-center align-items-center">
-                          {/* Icons in a row */}
-                          <div className="">
-                            <button
-                              type="button"
-                              className="btn btn-link btn-floating mx-1"
-                            >
-                              <img
-                                src={require("../imgs/google.png")}
-                                alt=""
-                                className="login-icon"
-                                // width={"20%"}
-                              />
-                            </button>
-                          </div>
+                      <p className="hrline">or</p>
 
-                          <div className="">
-                            <button
-                              type="button"
-                              className="btn btn-link btn-floating mx-1"
-                            >
-                              <img
-                                src={require("../imgs/facebook.png")}
-                                alt=""
-                                className="login-icon"
-                                // width={"20%"}
-                              />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Link to SignUp */}
-                      <div className="">
-                        <Link className="btn w-100" to={"/signup"}>
-                          Create a new Account?
+                      <div className="mt-3 text-center">
+                        <Link className="w-100 text-dark text-decoration-none" to={"/signup"}>
+                          Create a new Account? {" "}
                           <span className="text-primary">Register</span>
                         </Link>
                       </div>
 
                       <div className="form-outline">
-                        {/* Forgot password */}
-                        <div className="text-lg-center">
+                        <div className="text-center">
                           <Link
                             to={"/forgotpassword"}
-                            className="text-secondary text-decoration-none"
+                            className="text-muted text-decoration-none"
                           >
                             Forgot password
                           </Link>

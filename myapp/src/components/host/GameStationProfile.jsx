@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Logo from "../imgs/1.png";
 // import ToastMessages from "../ToastMessages";
-import { FaEllipsisV } from "react-icons/fa";
+import { FaEllipsisV, FaMapMarkerAlt } from "react-icons/fa";
 import "../Assets/CSS/HostGSProfile.css";
 import hostApis from "../apis/HostApis";
+import ConfirmationModal from "../ConfirmationModal";
+import { GridLoader } from "react-spinners";
 
 const GameStationProfile = () => {
   const { stationId } = useParams();
@@ -12,12 +14,17 @@ const GameStationProfile = () => {
   const [loading, setLoading] = useState(true);
   const [showImages, setShowImages] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
   //   const [toast, setToast] = useState({
   //     show: false,
   //     type: "",
   //     message: "",
   //   });
+
+  useEffect(() => {
+    document.title = "PlayWays Host - Gamestation Profile";
+  });
 
   useEffect(() => {
     const fetchStationData = async () => {
@@ -67,19 +74,17 @@ const GameStationProfile = () => {
     }
   };
 
-
   const toggleDropdown = (e) => {
     e.stopPropagation();
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleOptionClick = (option) => {
-    console.log("Clicked option:", option);
-    setIsDropdownOpen(false);
-  };
-
   const handleSetTimingClick = () => {
     navigate(`/host/gameStation/${stationId}/addTiming`);
+  };
+
+  const handleUpdateDetails = () => {
+    navigate(`/host/gameStation/${stationId}/updateProfile`);
   };
 
   const handleImageUpload = async (event) => {
@@ -87,11 +92,11 @@ const GameStationProfile = () => {
       document.getElementById("imageUploadInput").click();
       return;
     }
-  
+
     const imageFile = event.target.files[0];
     const formData = new FormData();
     formData.append("photo", imageFile);
-  
+
     try {
       await hostApis.addImage(stationId, formData);
       fetchStationData();
@@ -100,10 +105,62 @@ const GameStationProfile = () => {
     }
   };
 
+  const handleVideoUpload = async (event) => {
+    if (!event) {
+      document.getElementById("videoUploadInput").click();
+      return;
+    }
+
+    const videoFile = event.target.files[0];
+    const formData = new FormData();
+    formData.append("videoFile", videoFile);
+
+    try {
+      await hostApis.addVideo(stationId, formData);
+      fetchStationData();
+    } catch (error) {
+      console.error("Error uploading video:", error);
+    }
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+    setIsDropdownOpen(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await hostApis.deleteGameStation(stationId);
+      localStorage.removeItem("selectedStationId");
+      navigate("/host/");
+    } catch (error) {
+      console.error("Error deleting game station:", error);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleLocationClick = () => {
+    // Redirect to Google Maps with the latitude and longitude of the station
+    if (stationData && stationData.latitude && stationData.longitude) {
+      const url = `https://www.google.com/maps?q=${stationData.latitude},${stationData.longitude}`;
+      window.open(url, "_blank");
+    }
+  };
+
   return (
     <div className="container mt-3">
       {loading ? (
-        <p>Loading...</p>
+        <div
+          className="row d-flex justify-content-center align-items-center"
+          style={{ minHeight: "60vh" }}
+        >
+          <div className="col-md-1 text-center justify-content-center">
+            <GridLoader type="Oval" color="#FFD700" height={50} width={50} />
+          </div>
+        </div>
       ) : (
         stationData && (
           <>
@@ -111,7 +168,10 @@ const GameStationProfile = () => {
               <div className="card bg-golden rounded-4 bg-opacity-50 shadow">
                 <div className="card-body text-white">
                   <div className="row">
-                    <div className="text-end position-relative">
+                    <div className="text-end position-relative  d-flex align-items-center justify-content-end mb-2">
+                      <div className="me-3" onClick={handleLocationClick}>
+                        <FaMapMarkerAlt className="me-2" />
+                      </div>
                       <div className="" onClick={(e) => toggleDropdown(e)}>
                         <FaEllipsisV style={{ cursor: "pointer" }} />
                       </div>
@@ -124,10 +184,13 @@ const GameStationProfile = () => {
                             <li onClick={(e) => handleImageUpload()}>
                               Add Image
                             </li>
-                            <li onClick={() => handleOptionClick("Option 3")}>
+                            <li onClick={(e) => handleVideoUpload()}>
+                              Add Video
+                            </li>
+                            <li onClick={() => handleUpdateDetails()}>
                               Update Details
                             </li>
-                            <li onClick={() => handleOptionClick("Option 4")}>
+                            <li onClick={() => handleDeleteClick()}>
                               Delete Station
                             </li>
                             <li onClick={() => handleSetTimingClick()}>
@@ -146,12 +209,13 @@ const GameStationProfile = () => {
                       >
                         <img
                           src={
-                            `${process.env.REACT_APP_baseUrl}${stationData.gsLogo}` ||
-                            Logo
+                            stationData.gsLogo
+                              ? `${process.env.REACT_APP_baseUrl}${stationData.gsLogo}`
+                              : Logo
                           }
                           alt="Game Station Logo"
                           className="img-fluid rounded-circle border-dark border"
-                          width={window.innerWidth < 768 ? "150" : "600"}
+                          width={window.innerWidth < 768 ? "150" : "580"}
                           style={{ aspectRatio: "1/1", objectFit: "cover" }}
                         />
                       </div>
@@ -178,7 +242,7 @@ const GameStationProfile = () => {
                               Viewers
                             </label>
                             <h5 className="text-uppercase" id="visits">
-                              {"00"}
+                              {stationData.viewers ? stationData.viewers : "00"}
                             </h5>
                           </div>
                           <div
@@ -205,6 +269,15 @@ const GameStationProfile = () => {
               onChange={handleImageUpload}
               style={{ display: "none" }}
               id="imageUploadInput"
+              multiple={false}
+            />
+            <input
+              type="file"
+              accept="video/*"
+              onChange={handleVideoUpload}
+              style={{ display: "none" }}
+              id="videoUploadInput"
+              multiple={false}
             />
             <div className="row mt-3">
               <div className="col-md-12 text-center">
@@ -268,6 +341,12 @@ const GameStationProfile = () => {
           </>
         )
       )}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onCancel={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        message="Are you sure you want to delete this game station?"
+      />
       {/* <ToastMessages
         show={toast.show}
         onClose={() => setToast({ ...toast, show: false })}

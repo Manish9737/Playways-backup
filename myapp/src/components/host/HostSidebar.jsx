@@ -48,13 +48,12 @@ const HostSidebar = () => {
             </button>
           </div>
           <span
-            className="navbar-brand text-center mb-0 h1"
+            className="navbar-brand text-center mx-auto mb-0 h1"
             style={{ fontFamily: "joshephin" }}
           >
             Host Administration
           </span>
           <div className="text-end"></div>{" "}
-          {/* This is to keep the center alignment */}
         </div>
       </nav>
       <div className="container-fluid ">
@@ -112,7 +111,7 @@ const HostSidebar = () => {
                     </React.Fragment>
                   ))}
 
-                  <li className="nav-item">
+                  <li className="nav-item w-100">
                     <Link
                       className="nav-link align-middle px-0 w-100 m-1 text-white"
                       onClick={() => setShowLogoutModal(true)}

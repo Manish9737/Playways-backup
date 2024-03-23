@@ -21,7 +21,6 @@ export const HostProvider = ({ children }) => {
         setHost(response.data.host);
         setIsAuthenticated(true);
         navigate("/host/gameStations");
-
         setError(null);
       } else {
         setIsAuthenticated(false);
@@ -30,6 +29,9 @@ export const HostProvider = ({ children }) => {
     } catch (error) {
       setIsAuthenticated(false);
       setError("An error occurred while logging in. Please try again.");
+      setTimeout(() => {
+        setError("");
+      }, 1500);
       console.error("Login error:", error);
     }
   };

@@ -11,6 +11,10 @@ const Bookings = () => {
   const [filter, setFilter] = useState("all");
 
   useEffect(() => {
+    document.title = "PlayWays Admin - Bookings";
+  }, []);
+
+  useEffect(() => {
     const fetchBookings = async () => {
       try {
         const response = await adminApis.fetchBookings(); // Update the API endpoint

@@ -1,60 +1,59 @@
 import React from "react";
+import { Modal, Button } from "react-bootstrap";
 import Logo from "./imgs/Logo.png";
 
-const UserProfileModal = ({ userData, onClose }) => {
+const UserProfileModal = ({ show, userData, onClose }) => {
   return (
-    <div
-      className="modal fade show"
-      tabIndex="-1"
-      role="dialog"
-      style={{ display: "block" }}
-    >
-      <div className="modal-dialog modal-dialog-centered" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">User Profile</h5>
-            <button
-              type="button"
-              className="btn-close"
-              onClick={onClose}
-              aria-label="Close"
-            ></button>
+    <Modal show={show} onHide={onClose} centered className="custom-modal-width">
+      <Modal.Header closeButton>
+        <Modal.Title>User Profile</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="row mb-3 ">
+          <div className="col-md-6">
+            <img
+              src={
+                userData.ProfileImg
+                  ? `${process.env.REACT_APP_baseUrl}${userData.ProfileImg}`
+                  : Logo
+              }
+              className="img-fluid rounded-circle border"
+              alt="User"
+              style={{
+                aspectRatio: "1/1",
+                objectFit: "cover",
+                maxWidth: "250px",
+                minWidth: "250px",
+                minHeight: "250px",
+                maxHeight: "250px",
+              }}
+            />
           </div>
-          <div className="modal-body">
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <img
-                  src={
-                    userData.ProfileImg
-                      ? `${process.env.REACT_APP_baseUrl}${userData.ProfileImg}`
-                      : Logo
-                  }
-                  className="img-fluid rounded"
-                  alt="User"
-                  style={{ aspectRatio: "1/1", objectFit: "cover" }}
-                />
-              </div>
-              <div className="col-md-6">
-                <h2>User Profile</h2>
-                <p>Name: {userData.userName}</p>
-                <p>Email: {userData.email}</p>
-                <p>Phone: {userData.phone}</p>
-                <p>Is Prime User: {userData.IsPrimeUser ? "Yes" : "No"}</p>
-              </div>
-            </div>
-          </div>
-          <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={onClose}
-            >
-              Close
-            </button>
+          <div className="col-md-6">
+            <h2 className="mb-4">User Profile</h2>
+            <p>
+              <b>Name:</b>
+              {userData.userName}
+            </p>
+            <p>
+              <b>Email:</b> {userData.email}
+            </p>
+            <p>
+              <b>Phone:</b> {userData.phone}
+            </p>
+            <p>
+              <b>IsPrimeUser: </b>
+              {userData.IsPrimeUser ? "Yes" : "No"}
+            </p>
           </div>
         </div>
-      </div>
-    </div>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={onClose}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 

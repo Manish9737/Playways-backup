@@ -1,27 +1,29 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const activitySchema = new mongoose.Schema({
+const activitySchema = new mongoose.Schema(
+  {
     adminId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Admin',
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true,
     },
-
     activityType: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     actionType: {
-        type: String,
-        enum: ['add', 'update', 'delete', 'other'],
-        required: true
+      type: String,
+      enum: ["add", "update", "delete", "other"],
+      required: true,
     },
     timestamp: {
-        type: Date,
-        default: Date.now
-    }
-});
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { timestamps: true }
+);
 
-const Activity = mongoose.model('Activities', activitySchema);
+const Activity = mongoose.model("Activities", activitySchema);
 
 module.exports = Activity;

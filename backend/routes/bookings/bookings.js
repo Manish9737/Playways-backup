@@ -5,7 +5,7 @@ const {
 } = require("../../controller/bookings/bookingsController");
 const router = express.Router();
 
-router.post("/addBooking", addBooking); // add Booking
+router.post("/:gameStationId/addBooking", addBooking); // add Booking
 router.get("/allBookings", allBookings); // get all booking
 
 module.exports = router;

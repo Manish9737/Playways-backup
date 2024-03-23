@@ -1,4 +1,5 @@
 import {
+  FaBlog,
   FaBook,
   FaBriefcase,
   FaDashcube,
@@ -56,6 +57,12 @@ const SideBarAdmin = (adminId, isSuperUser) => [
     title: "Feedback",
     path: `/admin/${adminId}/feedbacks`,
     icon: <FaRegComments className="text-golden" />,
+    cName: "nav-text",
+  },
+  {
+    title: "Blogs",
+    path: `/admin/${adminId}/blogs`,
+    icon: <FaBlog className="text-golden" />,
     cName: "nav-text",
   },
   {

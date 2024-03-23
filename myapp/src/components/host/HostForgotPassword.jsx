@@ -30,7 +30,7 @@ const HostForgotPassword = () => {
 
       if (response.status === 200) {
         console.log("Password reset otp sent successfully.");
-        localStorage.setItem("email", email);
+        localStorage.setItem("hostEmail", email);
 
         setSuccess("Password reset otp sent successfully.");
         setError("");
