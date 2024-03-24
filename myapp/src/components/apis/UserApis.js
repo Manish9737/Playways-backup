@@ -43,6 +43,7 @@ const userApis = {
 
     // Bookings
     addBookings: (stationId, bookingData) => axiosInstance.post(`/bookings/${stationId}/addBooking`, bookingData),
+    updateBookingIdinSlot: (slotId, slotData) => axiosInstance.put(`/slots/${slotId}/updateSlot`, slotData),
     getBookingsOfUser: (userId) => axiosInstance.get(`/users/${userId}/bookings`),
 
 };

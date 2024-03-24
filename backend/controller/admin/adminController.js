@@ -402,7 +402,7 @@ const deleteUser = async (req, res, next) => {
 
     const activity = new Activity({
       adminId: adminId,
-      activityType: "User Updated",
+      activityType: "User deleted",
       actionType: "delete",
     });
 

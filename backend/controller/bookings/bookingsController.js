@@ -36,7 +36,8 @@ const allBookings = async (req, res, next) => {
   try {
     const bookings = await Booking.find()
       .populate("userId")
-      .populate("gameStationId");
+      .populate("gameStationId")
+      .populate("game");
 
     res.status(200).json({ bookings });
   } catch (error) {

@@ -14,6 +14,7 @@ const Bookings = () => {
     document.title = "PlayWays Admin - Bookings";
   }, []);
 
+
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -121,7 +122,8 @@ const Bookings = () => {
                   <tr>
                     <th>ID</th>
                     <th>User</th>
-                    <th>Slot DateTime</th>
+                    <th>Slot Date</th>
+                    <th>Slot Time</th>
                     <th>Duration</th>
                     <th>Game Station</th>
                     <th>Status</th>
@@ -133,11 +135,12 @@ const Bookings = () => {
                     <tr key={booking._id}>
                       <td>{index+1}</td>
                       <td>{booking.userId.userName}</td>
-                      <td>{new Date(booking.slotDateTime).toLocaleString()}</td>
+                      <td>{new Date(booking.slotDate).toLocaleDateString()}</td>
+                      <td>{booking.slotTiming}</td>
                       <td>{booking.duration}</td>
                       <td>{booking.gameStationId.name}</td>
                       <td>{booking.status}</td>
-                      <td>{booking.game}</td>
+                      <td>{booking.game.name}</td>
                     </tr>
                   ))}
                 </tbody>

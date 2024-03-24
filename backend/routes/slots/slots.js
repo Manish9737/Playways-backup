@@ -16,6 +16,7 @@ router.put("/:gsid/update", updateSlots);
 
 router.get("/:slotId/slot", fetchdataOfSlot);
 
+
 router.put("/:slotId/updateSlot", updateSlot);
 
 router.delete("/:slotId/deleteSlot", updateSlot);

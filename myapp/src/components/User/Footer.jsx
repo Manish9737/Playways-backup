@@ -67,7 +67,7 @@ const Footer = () => {
               <ul className="flex-column ms-n3 nav">
                 <li className="nav-item">
                   <Link className="nav-link text-secondary" to={"/T&C"}>
-                    Terms
+                    T&C
                   </Link>
                 </li>
 

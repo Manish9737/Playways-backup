@@ -225,7 +225,7 @@ const Slots = () => {
               <th>Status</th>
               <th className="text-center">Action</th>
             </tr>
-          </thead>
+          </thead> 
           <tbody>
             {filteredSlots &&
               filteredSlots.length > 0 &&
@@ -233,7 +233,7 @@ const Slots = () => {
                 <React.Fragment key={index}>
                   {filteredSlot.slots.map((slot, slotIndex) => (
                     <tr key={slotIndex}>
-                      <td>{index + 1}</td>
+                      <td>{slotIndex+1}</td>
                       <td>
                         {slot.timefrom} - {slot.timeto}
                       </td>

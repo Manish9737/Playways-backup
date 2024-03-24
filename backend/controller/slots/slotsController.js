@@ -198,11 +198,13 @@ const deleteSlot = async (req, res, next) => {
       return res.status(404).json({ message: "Slot not found" });
     }
 
-    slot.slots.splice(foundSlotIndex, 1); // Remove the slot
+    Object.keys(updateData).forEach((key) => {
+      slot.slots[foundSlotIndex][key] = updateData[key];
+    });
 
     await slot.save();
 
-    res.json({ message: "Slot deleted successfully" });
+    res.json({ message: "Slot deleted successfully", slot: slot.slots[foundSlotIndex] });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });

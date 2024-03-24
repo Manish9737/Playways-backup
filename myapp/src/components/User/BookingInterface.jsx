@@ -6,12 +6,13 @@ import ReactDatePicker from "react-datepicker";
 import userApis from "../apis/UserApis";
 
 const BookingInterface = () => {
+  const navigate = useNavigate();
   const { stationId, gameId } = useParams();
   const [gameData, setGameData] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
   const [slots, setSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = "Play Ways - Add Booking";
@@ -33,17 +34,23 @@ const BookingInterface = () => {
   useEffect(() => {
     const fetchSlots = async () => {
       try {
+        setLoading(true);
         if (!selectedDate) return;
-        const formattedDate = selectedDate.toISOString().split("T")[0];
-        // setLoading(true);
+        // const formattedDate = selectedDate.toISOString().split("T")[0];
+        const formattedDate = new Date(selectedDate);
+        formattedDate.setDate(formattedDate.getDate() + 1)
+        formattedDate.setHours(0, 0, 0, 0);
+        const formattedDateString = formattedDate.toISOString().split("T")[0];
+
         const response = await userApis.fetchSlots(
           stationId,
           gameId,
-          formattedDate
-        );
+          formattedDateString
+          );
         setSlots(response.data.slots);
-        // setLoading(false);
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         console.error("Error fetching slots:", error);
       }
     };
@@ -57,7 +64,6 @@ const BookingInterface = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("Selected Slot:", selectedSlot);
 
     const userId = localStorage.getItem("userId");
 
@@ -70,15 +76,29 @@ const BookingInterface = () => {
       slotDate: selectedDate.toISOString(),
       duration: gameData.time,
       game: gameId,
-      paymentStatus: "pending",
+      paymentStatus: "successfull",
       status: "confirmed",
       slotTiming: slotTiming,
     };
 
     try {
-      const response = await userApis.addBookings(stationId, bookingData);
+      const bookingResponse = await userApis.addBookings(
+        stationId,
+        bookingData
+      );
 
-      console.log("Booking created successfully:", response);
+      const updatedBookingData = {
+        bookingid: bookingResponse.data.booking._id,
+        paymentid: "65fe78959cfb7281d9163878",
+        status: "Booked",
+      };
+
+      await userApis.updateBookingIdinSlot(
+        selectedSlot._id,
+        updatedBookingData
+      );
+
+      console.log("Booking created successfully:", bookingResponse);
     } catch (error) {
       console.error("Error creating booking:", error);
     }
@@ -123,7 +143,7 @@ const BookingInterface = () => {
                       />
                     </div>
                   </div>
-                  {selectedDate && (
+                  {selectedDate && !loading && (
                     <>
                       {slots.length > 0 ? (
                         <div className="row row-cols-1 row-cols-md-4">
@@ -134,11 +154,14 @@ const BookingInterface = () => {
                                   className="col"
                                   key={`${index}-${slotIndex}`}
                                 >
+                                  {loading && <p>Loading...</p>}
                                   <button
                                     type="button"
                                     className={`btn m-1 rounded-pill ${
                                       slot.status === "Booked"
                                         ? "active disabled btn-secondary"
+                                        : slot === selectedSlot
+                                        ? "btn-primary"
                                         : "btn-outline-primary"
                                     }`}
                                     onClick={() => handleSlotClick(slot)}

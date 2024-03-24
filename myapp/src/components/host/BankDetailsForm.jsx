@@ -30,15 +30,15 @@ const BankDetailsForm = () => {
     <>
       <div className="bg p-3">
         <div className="container">
-          <div className="row justify-content-center">
+          <div className="row justify-content-center align-items-center" style={{minHeight: "85vh"}}>
             <div className="col-md-6">
-              <div className="card p-3">
+              <div className="card p-3 shadow">
                 <div className="card-body">
                   <h2 className="mt-3 mb-4 text-center">Bank Details</h2>
                   <form onSubmit={handleSubmit}>
                     <div className="mb-3">
                       <label htmlFor="accountHolderName" className="form-label">
-                        Account Holder Name
+                        Account Holder Name 
                       </label>
                       <input
                         type="text"
@@ -67,6 +67,7 @@ const BankDetailsForm = () => {
                     <div className="mb-3">
                       <label htmlFor="bankName" className="form-label">
                         Bank Name
+                         {/* <span className="" style={{fontSize:"12px"}}>{" "}* Enter Full Name</span> */}
                       </label>
                       <input
                         type="text"

@@ -516,7 +516,8 @@ const getAllBookingsByGsId = async (req, res, next) => {
   try {
     const bookings = await Booking.find({ gameStation: gameStationId })
       .populate("userId", "-password")
-      .populate("gameStationId");
+      .populate("gameStationId")
+      .populate("game");
 
     if (!bookings || bookings.length === 0) {
       return res.status(404).json({

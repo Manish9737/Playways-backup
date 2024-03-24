@@ -79,7 +79,7 @@ const GameCatalogPage = () => {
         <div className="text-start mb-3">
           <Link
             to={`/host/gameStation/${stationId}/games`}
-            className="btn btn-secondary"
+            className="btn btn-secondary mb-3"
           >
             Back
           </Link>

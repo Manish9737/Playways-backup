@@ -13,6 +13,8 @@ const GameStationBookings = () => {
     document.title = "PlayWays Host - Bookings"
   })
 
+  // console.log(bookings)
+
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -62,9 +64,10 @@ const GameStationBookings = () => {
             <thead>
               <tr>
                 <th scope="col">Booking ID</th>
-                <th scope="col">Game</th>
+                <th scope="col">Slot Date</th>
                 <th scope="col">User</th>
                 <th scope="col">GameStation</th>
+                <th scope="col">Game</th>
                 <th scope="col">Slot Timing</th>
                 {/* <th scope="col">Booking Date</th> */}
                 <th scope="col">Status</th>
@@ -72,13 +75,14 @@ const GameStationBookings = () => {
               </tr>
             </thead>
             <tbody>
-              {bookings.map((booking) => (
+              {bookings.map((booking, index) => (
                 <tr key={booking._id}>
-                  <td>{booking._id}</td>
-                  <td>{booking.game}</td>
+                  <td>{index+1}</td>
+                  <td>{new Date(booking.slotDate).toLocaleDateString()}</td>
                   <td>{booking.userId.userName}</td>
                   <td>{booking.gameStationId.name}</td>
-                  <td>{booking.slotDateTime}</td>
+                  <td>{booking.game.name}</td>
+                  <td>{booking.slotTiming}</td>
                   {/* <td>{booking.createdAt}</td> */}
                   <td>{booking.status}</td>
                   <td>
@@ -95,7 +99,7 @@ const GameStationBookings = () => {
           </table>
         </div>
       </div>
-      <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>Booking Details</Modal.Title>
         </Modal.Header>
@@ -106,7 +110,7 @@ const GameStationBookings = () => {
                 <strong>Booking ID:</strong> {selectedBooking._id}
               </p>
               <p>
-                <strong>Game:</strong> {selectedBooking.game}
+                <strong>Game:</strong> {selectedBooking.game.name}
               </p>
               <p>
                 <strong>User:</strong> {selectedBooking.userId.userName}
@@ -116,13 +120,13 @@ const GameStationBookings = () => {
                 {selectedBooking.gameStationId.name}
               </p>
               <p>
-                <strong>Slot Timing:</strong> {selectedBooking.slotDateTime}
+                <strong>Slot Timing:</strong> {selectedBooking.slotTiming}
               </p>
               <p>
-                <strong>Duration:</strong> {selectedBooking.duration}
+                <strong>Duration:</strong> {selectedBooking.duration} minutes
               </p>
               <p>
-                <strong>Booking Time:</strong> {selectedBooking.createdAt}
+                <strong>Booking Time:</strong> {new Date (selectedBooking.createdAt).toLocaleDateString()}
               </p>
               <p>
                 <strong>Status:</strong> {selectedBooking.status}
