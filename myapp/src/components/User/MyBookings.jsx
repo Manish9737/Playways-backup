@@ -27,6 +27,33 @@ const MyBookings = () => {
     fetchBookings();
   }, [userId]);
 
+  const sortedBookings = [...bookings].sort((a, b) => {
+    return new Date(b.slotDate) - new Date(a.slotDate);
+  });
+
+  const handleCancelBooking = async (booking) => {
+    try {
+      const response = await userApis.findSlotIdfromBookingId(booking._id);
+      const slotId = response.data.slot._id;
+
+      await userApis.cancelBooking(booking._id);
+
+      await userApis.updateBookingIdinSlot(slotId, {
+        status: "Available",
+        bookingid: null,
+      });
+
+      const updatedBookings = bookings.filter(
+        (item) => item._id !== booking._id
+      );
+      setBookings(updatedBookings);
+
+      setShowModal(false);
+    } catch (error) {
+      console.log("Error canceling booking:", error);
+    }
+  };
+
   const handleViewBooking = (booking) => {
     setSelectedBooking(booking);
     setShowModal(true);
@@ -60,9 +87,11 @@ const MyBookings = () => {
               <GridLoader type="Oval" color="#FFD700" height={50} width={50} />
             </div>
           </div>
+        ) : bookings.length === 0 ? (
+          <p className="text-center">No bookings available.</p>
         ) : (
           <div className="p-5">
-            {bookings.map((booking) => (
+            {sortedBookings.map((booking) => (
               <div className="card mb-3 shadow" key={booking._id}>
                 <div className="row g-0">
                   <div className="col-md-4">
@@ -71,14 +100,19 @@ const MyBookings = () => {
                       className="img-fluid rounded-start"
                       alt="Game"
                       style={{
-                        aspectRatio: "4/3",
+                        aspectRatio: "1/1",
                         objectFit: "cover",
+                        maxWidth: "300px",
+                        maxHeight: "300px",
                       }}
                     />
                   </div>
                   <div className="col-md-8">
                     <div className="card-body">
                       <h2 className="card-title mb-3">{booking.game.name}</h2>
+                      <p className="card-text">
+                        <strong>Station:</strong> {booking.gameStationId.name}
+                      </p>
                       <p className="card-text">
                         <strong>Date:</strong>{" "}
                         {new Date(booking.slotDate).toLocaleDateString()}
@@ -114,6 +148,9 @@ const MyBookings = () => {
               <div>
                 <h5>{selectedBooking.game.name}</h5>
                 <p>
+                  <strong>Station:</strong> {selectedBooking.gameStationId.name}
+                </p>
+                <p>
                   <strong>Date:</strong>{" "}
                   {new Date(selectedBooking.slotDate).toLocaleDateString()}
                 </p>
@@ -130,6 +167,19 @@ const MyBookings = () => {
                 <p>
                   <strong>Status:</strong> {selectedBooking.status}
                 </p>
+                {new Date(selectedBooking.slotDate) > new Date() && (
+                  <Button
+                    variant="danger"
+                    onClick={() => handleCancelBooking(selectedBooking)}
+                  >
+                    Cancel Booking
+                  </Button>
+                )}
+                {new Date(selectedBooking.slotDate) <= new Date() && (
+                  <p className="text-danger">
+                    You can cancel this booking before the booking date.
+                  </p>
+                )}
               </div>
             )}
           </Modal.Body>

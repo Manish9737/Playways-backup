@@ -5,10 +5,13 @@ const {
   updateSlots,
   fetchdataOfSlot,
   updateSlot,
+  findSlotByBookingId,
 } = require("../../controller/slots/slotsController");
 var router = express.Router();
 
 router.get("/allSlots", getAllSlots);
+
+router.get("/:bookingId", findSlotByBookingId);
 
 router.post("/:gsid/addSlots", addSlots);
 

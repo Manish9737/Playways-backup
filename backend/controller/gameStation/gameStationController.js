@@ -482,6 +482,66 @@ const addGameToGs = async (req, res, next) => {
   }
 };
 
+const updateGameInGs = async (req, res, next) => {
+  try {
+    const { gameId, gameStationId } = req.params;
+    const { description, slotPrice, time } = req.body;
+
+    const gameStation = await GameStation.findById(gameStationId);
+    if (!gameStation) {
+      return res.status(404).json({ message: "Game station not found" });
+    }
+
+    const game = gameStation.games.find((game) => game._id.toString() === gameId);
+    if (!game) {
+      return res.status(404).json({ message: "Game not found in the game station" });
+    }
+
+    game.description = description;
+    game.slotPrice = slotPrice;
+    game.time = time;
+
+    await gameStation.save();
+
+    res.status(200).json({
+      message: "Game details updated successfully",
+      game,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const deleteGameFromGs = async (req, res, next) => {
+  try {
+    const { gameId, gameStationId } = req.params;
+
+    const gameStation = await GameStation.findById(gameStationId);
+    if (!gameStation) {
+      return res.status(404).json({ message: "Game station not found" });
+    }
+
+    const gameIndex = gameStation.games.findIndex(
+      (game) => game._id.toString() === gameId
+    );
+    if (gameIndex === -1) {
+      return res.status(404).json({ message: "Game not found in the game station" });
+    }
+
+    gameStation.games.splice(gameIndex, 1);
+
+    await gameStation.save();
+
+    res.status(200).json({
+      message: "Game deleted from the game station successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 const getGamesOfGs = async (req, res, next) => {
   const { stationId } = req.params;
 
@@ -495,7 +555,7 @@ const getGamesOfGs = async (req, res, next) => {
     }
 
     const games = gameStation.games.map((game) => ({
-      id: game.game.id,
+      id: game._id,
       image: game.game.image,
       name: game.game.name,
       timing: game.time,
@@ -509,6 +569,7 @@ const getGamesOfGs = async (req, res, next) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 const getAllBookingsByGsId = async (req, res, next) => {
   const gameStationId = req.params.id;
@@ -695,6 +756,8 @@ module.exports = {
   getCountOfStationsById,
   getGsById,
   addGameToGs,
+  updateGameInGs,
+  deleteGameFromGs,
   getGamesOfGs,
   getAllBookingsByGsId,
   updateOpeningClosingTime,

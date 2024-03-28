@@ -1,6 +1,5 @@
 const Qoute = require("../../model/quoteSchema");
 
-
 const addQuotes = async (req, res, next) => {
   const { name, quote } = req.body;
 
@@ -17,7 +16,6 @@ const addQuotes = async (req, res, next) => {
       const quotes = new Qoute({ name, quote });
 
       await quotes.save();
-      //   console.log("Host is Registered");
       return res
         .status(200)
         .json({ message: "Quote is saved successfully.", success: true });
@@ -35,7 +33,6 @@ const getallQuotes = async (req, res, next) => {
     const quotes = await Qoute.find();
 
     res.status(200).json({ quotes });
-    // console.log(quotes);
   } catch (err) {
     return res
       .status(500)
@@ -90,5 +87,5 @@ module.exports = {
   addQuotes,
   getallQuotes,
   updateQuote,
-  deleteQuote
+  deleteQuote,
 };

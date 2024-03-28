@@ -85,6 +85,10 @@ const Games = () => {
                   src={`${process.env.REACT_APP_baseUrl}${game.image}`}
                   className="card-img-top"
                   alt={game.name}
+                  style={{
+                    aspectRatio:"4/3",
+                    objectFit: "cover"
+                  }}
                 />
                 <div className="card-body">
                   <h4 className="card-title">{game.name}</h4>

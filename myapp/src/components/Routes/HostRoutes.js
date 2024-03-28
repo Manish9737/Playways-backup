@@ -72,8 +72,8 @@ const HostRoutes = () => {
             </PrivateRoute>
           }
         >
-          <Route path="bankDetails" element={<BankDetailsForm />} />
           <Route path=":stationId" element={<GameStationProfile />} />
+          <Route path=":stationId/bankDetails" element={<BankDetailsForm />} />
           <Route path=":stationId/updateProfile" element={<UpdateDetails />} />
           <Route path=":stationId/addTiming" element={<GsTiming />} />
           <Route path=":stationId/bookings" element={<GameStationBookings />} />

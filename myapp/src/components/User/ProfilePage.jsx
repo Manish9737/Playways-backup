@@ -78,17 +78,6 @@ function ProfilePage() {
                     Profile
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link
-                    to="/profile"
-                    className={`nav-link ${
-                      activeTab === "History" && "active"
-                    }`}
-                    onClick={() => handleTabClick("History")}
-                  >
-                    History
-                  </Link>
-                </li>
               </ul>
             </div>
             <div className="content mt-md-2 p-md-4">
@@ -133,26 +122,6 @@ function ProfilePage() {
                             <strong>Phone:</strong>{" "}
                             {user?.phone || "123-456-7890"}
                           </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {activeTab === "History" && (
-                <div className="History-content mt-md-2 p-md-4 p-3">
-                  <div className="row justify-content-center">
-                    <div className="col-md-8">
-                      <div className="card bg-secondary bg-opacity-25 mt-md-1">
-                        <div className="card-body">
-                          <h4 className="card-title">Match 1</h4>
-                          <p className="card-text">02/01/2024</p>
-                        </div>
-                      </div>
-                      <div className="card bg-secondary bg-opacity-25 mt-1">
-                        <div className="card-body">
-                          <h4 className="card-title">Match 2</h4>
-                          <p className="card-text">02/12/2023</p>
                         </div>
                       </div>
                     </div>

@@ -7,8 +7,6 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
 const session = require("express-session");
-const passport = require("passport");
-const socketIO = require('socket.io');
 
 var indexRouter = require("./routes/index/index");
 var usersRouter = require("./routes/users/users");
@@ -21,15 +19,16 @@ var gamesRouter = require("./routes/games/games");
 var feedbackRouter = require("./routes/feedback/feedback")
 var blogRouter = require("./routes/blog/blog");
 var slotRouter = require("./routes/slots/slots");
-const { sendMessage, createRoom } = require("./services/roomService");
+var paymentRouter = require("./routes/payment/payment");
+var bankDetailsRouter = require("./routes/bankDetails/bankDetails");
+
+const Razorpay = require('razorpay');
 
 require("./DB/conn");
 
 require("./middlewares/passportConfig");
 
 var app = express();
-const server = http.createServer(app);
-const io = socketIO(server);
 
 app.use(
   session({
@@ -38,8 +37,6 @@ app.use(
   })
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
 
 const corsOptions = {
   origin: "*", 
@@ -71,47 +68,8 @@ app.use("/games", gamesRouter);
 app.use("/feedback", feedbackRouter);
 app.use("/blogs", blogRouter);
 app.use("/slots", slotRouter);
-
-
-io.on('connection', socket => {
-  console.log('New client connected');
-
-  socket.on('sendMessage', async ({ roomId, senderId, messageContent }) => {
-    try {
-      const room = await sendMessage(roomId, senderId, messageContent);
-
-      io.emit('roomUpdated', room);
-    } catch (error) {
-      console.error('Error sending message:', error);
-    }
-  });
-
-  socket.on('getChatHistory', async ({ roomId }) => {
-    try {
-      const chatHistory = []; 
-
-      socket.emit('chatHistory', chatHistory);
-    } catch (error) {
-      console.error('Error retrieving chat history:', error);
-    }
-  });
-
-  socket.on('createRoom', async ({ roomId, userId, hostId }) => {
-    try {
-      const room = await createRoom(roomId, userId, hostId);
-
-      io.emit('roomCreated', room);
-    } catch (error) {
-      console.error('Error creating room:', error);
-    }
-  });
-
-  socket.on('disconnect', () => {
-    console.log('Client disconnected');
-  });
-});
-
-
+app.use("/payment", paymentRouter);
+app.use("/bankDetails", bankDetailsRouter);
 
 app.use(function (req, res, next) {
   next(createError(404));
@@ -123,11 +81,6 @@ app.use(function (err, req, res, next) {
 
   res.status(err.status || 500);
   res.render("error");
-});
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Socket server running on port ${PORT}`);
 });
 
 module.exports = app;

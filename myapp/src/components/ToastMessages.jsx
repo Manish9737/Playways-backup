@@ -8,7 +8,6 @@ const ToastMessages = ({ show, onClose, type, message, duration = 3000 }) => {
         setShowToast(show);
     }, [show]);
 
-    // Hide the toast after the specified duration
     useEffect(() => {
         let timer;
         if (showToast) {
@@ -20,10 +19,8 @@ const ToastMessages = ({ show, onClose, type, message, duration = 3000 }) => {
         return () => clearTimeout(timer);
     }, [showToast, duration, onClose]);
 
-    // Determine toast color based on type
     const headerColor = type === 'success' ? 'bg-success text-white' : 'bg-danger text-white';
 
-    // Handle close event
     const handleClose = () => {
         setShowToast(false);
         onClose(); 
@@ -37,7 +34,7 @@ const ToastMessages = ({ show, onClose, type, message, duration = 3000 }) => {
             tabIndex="-1" 
             autohide 
             delay={duration} 
-            style={{ position: 'fixed', top: '20px', right: '20px' }}
+            style={{ position: 'fixed', top: '50px', right: '20px', zIndex: "99999" }}
         >
             <Toast.Header closeButton={true} className={headerColor}>
                 <img 

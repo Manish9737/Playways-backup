@@ -14,6 +14,8 @@ const addBooking = async (req, res, next) => {
       duration,
       game,
       gameStationId,
+      status: "booked",
+      paymentStatus: "successfull",
     });
 
     await newBooking.save();
@@ -46,7 +48,36 @@ const allBookings = async (req, res, next) => {
   }
 };
 
+const cancelBooking = async (req, res, next) => {
+  const { bookingId } = req.params;
+
+  try {
+    const booking = await Booking.findById(bookingId);
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+
+    if (new Date(booking.slotDate) <= today) {
+      return res.status(400).json({
+        message: "Booking cannot be canceled on the day of the booking or after",
+      });
+    }
+
+    await Booking.findByIdAndDelete(bookingId);
+
+    res.status(200).json({ message: "Booking canceled successfully" });
+  } catch (error) {
+    console.error("Error canceling booking:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   addBooking,
   allBookings,
+  cancelBooking
 };

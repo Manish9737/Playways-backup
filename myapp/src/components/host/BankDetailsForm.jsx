@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import hostApis from "../apis/HostApis";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const BankDetailsForm = () => {
+  const { stationId } = useParams();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     accountHolderName: "",
     accountNumber: "",
@@ -14,23 +18,34 @@ const BankDetailsForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
-    setFormData({
-      accountHolderName: "",
-      accountNumber: "",
-      bankName: "",
-      branch: "",
-      ifscCode: "",
-    });
+    try {
+      const response = await hostApis.bankDetails(stationId, formData);
+      console.log("Bank details added successfully:", response.data);
+      setFormData({
+        accountHolderName: "",
+        accountNumber: "",
+        bankName: "",
+        branch: "",
+        ifscCode: "",
+      });
+
+      navigate(`/host/gameStation/${stationId}/payments`);
+    } catch (error) {
+      console.error("Error adding bank details:", error);
+    }
   };
 
   return (
     <>
       <div className="bg p-3">
         <div className="container">
-          <div className="row justify-content-center align-items-center" style={{minHeight: "85vh"}}>
+          <div
+            className="row justify-content-center align-items-center"
+            style={{ minHeight: "85vh" }}
+          >
             <div className="col-md-6">
               <div className="card p-3 shadow">
                 <div className="card-body">
@@ -38,7 +53,7 @@ const BankDetailsForm = () => {
                   <form onSubmit={handleSubmit}>
                     <div className="mb-3">
                       <label htmlFor="accountHolderName" className="form-label">
-                        Account Holder Name 
+                        Account Holder Name
                       </label>
                       <input
                         type="text"
@@ -67,7 +82,6 @@ const BankDetailsForm = () => {
                     <div className="mb-3">
                       <label htmlFor="bankName" className="form-label">
                         Bank Name
-                         {/* <span className="" style={{fontSize:"12px"}}>{" "}* Enter Full Name</span> */}
                       </label>
                       <input
                         type="text"
@@ -106,6 +120,12 @@ const BankDetailsForm = () => {
                       />
                     </div>
                     <div className="text-center">
+                      <Link
+                        to={`/host/gameStation/${stationId}/payments`}
+                        className="btn btn-secondary me-2"
+                      >
+                        Back
+                      </Link>
                       <button type="submit" className="btn btn-golden">
                         Submit
                       </button>

@@ -1,19 +1,19 @@
 const BankDetails = require("../../model/bankDetailsSchema");
-const Host = require('../../model/hostSchema');
+const GameStation = require("../../model/gsSchema");
 
 const addBankDetails = async (req, res) => {
-  const { hostId } = req.params;
+  const { gsId } = req.params;
   const { accountHolderName, accountNumber, bankName, branch, ifscCode } =
     req.body;
 
   try {
-    const host = await Host.findById(hostId);
+    const host = await GameStation.findById(gsId);
     if (!host) {
       return res.status(404).json({ success: false, message: 'Host not found' });
     }
 
     const bankDetails = new BankDetails({
-      hostId,
+      gsId,
       accountHolderName,
       accountNumber,
       bankName,
@@ -32,6 +32,24 @@ const addBankDetails = async (req, res) => {
   }
 };
 
+const getBankDetails = async (req, res) => {
+  const { gsId } = req.params;
+
+  try {
+    const bankDetails = await BankDetails.findOne({ gsId: gsId });
+
+    if (!bankDetails) {
+      return res.status(404).json({ success: false, message: 'Bank details not found' });
+    }
+
+    res.status(200).json({ success: true, bankDetails: bankDetails });
+  } catch (error) {
+    console.error("Error retrieving bank details:", error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   addBankDetails,
+  getBankDetails
 };

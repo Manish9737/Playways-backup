@@ -33,18 +33,24 @@ const userApis = {
     // gameStations
     fetchGameStations: () => axiosInstance.get('/gameStation/allStations'),
     getGameStationData: (userId,id) => axiosInstance.get(`/users/${userId}/gameStation/${id}`),
-    getAllGamesOfGs: (stationId) => axiosInstance.get(`/gameStation/${stationId}/games`),
+    getAllGamesOfGs: (stationId) => axiosInstance.get(`/users/${stationId}/games`),
     getGamedata: (stationId, gameId) => axiosInstance.get(`/gameStation/${stationId}/${gameId}/game`),
     fetchSlots: (stationId, gameId, date) => axiosInstance.get(`/gameStation/${stationId}/${gameId}/${date}/slots`),
+    fetchSlotsbyBookingId: (bookingId) => axiosInstance.get(`/slots/${bookingId}`),
     
     // Blogs
     fetchBlogs: () => axiosInstance.get('/blogs/get'),
 
-
     // Bookings
+    createRazorpayOrder: (amount) => axiosInstance.post(`/payment/createOrder`, amount),
     addBookings: (stationId, bookingData) => axiosInstance.post(`/bookings/${stationId}/addBooking`, bookingData),
     updateBookingIdinSlot: (slotId, slotData) => axiosInstance.put(`/slots/${slotId}/updateSlot`, slotData),
     getBookingsOfUser: (userId) => axiosInstance.get(`/users/${userId}/bookings`),
+    cancelBooking: (bookingId) => axiosInstance.delete(`/bookings/${bookingId}/cancel`),
+    savePayment: (paymentData) => axiosInstance.post(`/payment/paymentVerification`, paymentData),
+
+    findSlotIdfromBookingId: (bookingId) => axiosInstance.get(`/slots/${bookingId}`),
+    
 
 };
 

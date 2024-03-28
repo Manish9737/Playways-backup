@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const bankDetailsSchema = new mongoose.Schema({
-  hostId: {
+  gsId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Host",
+    ref: "GameStation",
     required: true,
   },
   accountHolderName: {

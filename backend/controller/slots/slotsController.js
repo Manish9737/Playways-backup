@@ -204,7 +204,10 @@ const deleteSlot = async (req, res, next) => {
 
     await slot.save();
 
-    res.json({ message: "Slot deleted successfully", slot: slot.slots[foundSlotIndex] });
+    res.json({
+      message: "Slot deleted successfully",
+      slot: slot.slots[foundSlotIndex],
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
@@ -221,9 +224,37 @@ const getAllSlots = async (req, res, next) => {
   }
 };
 
+const findSlotByBookingId = async (req, res, next) => {
+  const { bookingId } = req.params;
+
+  try {
+    const slot = await Slot.findOne({ "slots.bookingid": bookingId });
+
+    if (!slot) {
+      return res
+        .status(404)
+        .json({ message: "Slot not found for the booking ID" });
+    }
+
+    const foundSlot = slot.slots.find((s) => String(s.bookingid) === bookingId);
+
+    if (!foundSlot) {
+      return res
+        .status(404)
+        .json({ message: "Slot not found for the booking ID" });
+    }
+
+    res.json({ slot: foundSlot });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
 module.exports = {
   addSlots,
   getAllSlots,
+  findSlotByBookingId,
 
   fetchdataOfSlot,
   updateSlot,

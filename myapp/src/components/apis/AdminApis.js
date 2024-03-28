@@ -79,8 +79,10 @@ const adminApis = {
       "Content-Type": "multipart/form-data",
     }
   }),
-  deleteBlog: (adminId, blogId) => axiosInstance.put(`/admin/blogs/${adminId}/delete/${blogId}`),
+  deleteBlog: (adminId, blogId) => axiosInstance.delete(`/admin/blogs/${adminId}/delete/${blogId}`),
 
+  // payments
+  allPayments: () => axiosInstance.get(`/payment/all`),
 };
 
 export default adminApis;

@@ -1,17 +1,24 @@
 import React, { useCallback, useEffect, useState } from "react";
 import hostApis from "../apis/HostApis";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import { GridLoader } from "react-spinners";
+import { Button, Form, Modal } from "react-bootstrap";
 
 const GameStationGames = () => {
+  const navigate = useNavigate();
   const { stationId } = useParams();
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [selectedGame, setSelectedGame] = useState(null);
+  const [description, setDescription] = useState("");
+  const [slotPrice, setSlotPrice] = useState("");
+  const [timing, setTiming] = useState("");
 
   useEffect(() => {
-    document.title = "PlayWays Host - Games"
-  })
-
+    document.title = "PlayWays Host - Games";
+  });
 
   const fetchGamesOfGameStation = useCallback(async () => {
     try {
@@ -29,6 +36,38 @@ const GameStationGames = () => {
     fetchGamesOfGameStation();
   }, [stationId, fetchGamesOfGameStation]);
 
+  const handleUpdateGame = async () => {
+    try {
+      await hostApis.updateGameInGs(
+        stationId,
+        selectedGame.id,
+        description,
+        slotPrice,
+        timing
+      );
+      setShowModal(false);
+      fetchGamesOfGameStation();
+    } catch (error) {
+      console.error("Error updating game:", error);
+    }
+  };
+
+  const handleDeleteGame = async (gameId) => {
+    try {
+      await hostApis.deleteGameInGs(stationId, gameId);
+      fetchGamesOfGameStation();
+    } catch (error) {
+      console.error("Error deleting game:", error);
+    }
+  };
+
+  const handleShowModal = (game) => {
+    setSelectedGame(game);
+    setDescription(game.description);
+    setSlotPrice(game.slotPrice);
+    setTiming(game.timing);
+    setShowModal(true);
+  };
 
   return (
     <>
@@ -55,12 +94,19 @@ const GameStationGames = () => {
           Add Game
         </button>
         {loading ? (
-          <p>Loading...</p>
+          <div
+            className="row d-flex justify-content-center align-items-center"
+            style={{ minHeight: "60vh" }}
+          >
+            <div className="col-md-1 text-center justify-content-center">
+              <GridLoader type="Oval" color="#FFD700" height={50} width={50} />
+            </div>
+          </div>
         ) : (
           <div className="row row-cols-1 row-cols-md-4">
             {games.map((game) => (
               <div className="col mb-4" key={game.id}>
-                <div className="card shadow" style={{maxWidth: "300px"}}>
+                <div className="card shadow" style={{ maxWidth: "300px" }}>
                   <img
                     src={`${process.env.REACT_APP_baseUrl}${game.image}`}
                     alt=""
@@ -74,7 +120,25 @@ const GameStationGames = () => {
                     <h4 className="card-title">{game.name}</h4>
                     <p className="card-text">Timing: {game.timing} Minutes</p>
                     <p className="card-text">Description: {game.description}</p>
-                    <p className="card-text">Slot Price: <b>{game.slotPrice}</b></p>
+                    <p className="card-text">
+                      Slot Price: <b>{game.slotPrice}</b>
+                    </p>
+                  </div>
+                  <div className="card-footer">
+                    <div className="d-flex justify-content-around">
+                      <button
+                        className="btn btn-outline-primary"
+                        onClick={() => handleShowModal(game)}
+                      >
+                        <FaPencilAlt /> Update
+                      </button>
+                      <button
+                        className="btn btn-outline-danger"
+                        onClick={() => handleDeleteGame(game.id)}
+                      >
+                        <FaTrash /> Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -82,60 +146,50 @@ const GameStationGames = () => {
           </div>
         )}
       </div>
-      {/* {showModal && (
-        <div
-          className="modal fade show"
-          tabIndex="-1"
-          role="dialog"
-          style={{ display: "block" }}
-        >
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Add Game to Game Station</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setShowModal(false)}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <select
-                  className="form-select mb-3"
-                  onChange={(e) => setSelectedGame(e.target.value)}
-                  value={selectedGame}
-                >
-                  <option value="">Select a game</option>
-                  {allGames.length > 0 &&
-                    allGames.map((game) => (
-                      <option key={game._id} value={game._id}>
-                        {game.name}
-                      </option>
-                    ))}
-                </select>
-                <input
-                  type="text"
-                  className="form-control mb-3"
-                  placeholder="Enter price"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                />
-                <div className="text-end">
-                  <button
-                    className="btn btn-secondary me-2"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button className="btn btn-success" onClick={handleAddGame}>
-                    Add Game
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )} */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Update Game</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formDescription">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formSlotPrice">
+              <Form.Label>Slot Price</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter slot price"
+                value={slotPrice}
+                onChange={(e) => setSlotPrice(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formTime">
+              <Form.Label>Time</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter time"
+                value={timing}
+                onChange={(e) => setTiming(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+          <Button variant="golden" onClick={handleUpdateGame}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

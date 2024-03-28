@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import hostApis from "../apis/HostApis";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import ToastMessages from "../ToastMessages";
@@ -7,7 +7,6 @@ import ToastMessages from "../ToastMessages";
 const AddSlotsForm = () => {
   const { stationId } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const [gameid, setGameid] = useState("");
   const [date, setDate] = useState("");
   const [slotsData, setSlotsData] = useState([{ timefrom: "", timeto: "" }]);
@@ -32,15 +31,6 @@ const AddSlotsForm = () => {
     fetchGames();
   }, [stationId]);
 
-  useEffect(() => {
-    if (location.pathname !== `/host/gameStation/${stationId}/slots`) {
-      setToast({
-        show: true,
-        type: "success",
-        message: "Slots added successfully!",
-      });
-    }
-  }, [location.pathname, stationId]);
 
   const handleInputChange = (index, event) => {
     const { name, value } = event.target;
@@ -90,12 +80,12 @@ const AddSlotsForm = () => {
 
       await hostApis.addSlots(stationId, formattedSlotsData);
       console.log("Slots added successfully!");
+      setToast({
+        show: true,
+        type: "success",
+        message: "Slots added successfully!",
+      });
       navigate(`/host/gameStation/${stationId}/slots`);
-      // setToast({
-      //   show: true,
-      //   type: "success",
-      //   message: "Slots added successfully!",
-      // });
     } catch (error) {
       console.error("Error adding slots:", error);
       setToast({

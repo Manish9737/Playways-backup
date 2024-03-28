@@ -15,24 +15,26 @@ const {
   contactUs,
   findGameStationById,
   getAllBookingsByUserId,
+  getGamesOfGs,
 } = require("../../controller/users/userController");
 
 require("dotenv").config();
 
 
-router.post("/register", registerUser); // Register new User
-router.post("/login", loginUser); // login User
-router.get("/details/:id", userDetails); // User Details
-router.put("/update/:id", upload("images").single("ProfileImg"), updateProfile); // Update User Profile
-router.post("/forgot-password", forgotPassword); // Forgot User password
-router.post("/reset-password", resetPassword); // Reset User password
-router.post("/fetchOtp", fetchOTP); // fetch otp
-router.delete("/delete/:id", deleteUser); // Delete User
-router.get("/allUsers", allUsers); // All Users
-router.post("/upload/:id", upload("images").single("image"), uploadImg); // upload Profileimage
-router.post("/contactUs", contactUs); // Contact Us
-router.get("/:userId/gameStation/:id/", findGameStationById); // gs increase views
-router.get("/:userId/bookings", getAllBookingsByUserId); // gs increase views
+router.post("/register", registerUser); 
+router.post("/login", loginUser); 
+router.get("/details/:id", userDetails); 
+router.put("/update/:id", upload("images").single("ProfileImg"), updateProfile); 
+router.post("/forgot-password", forgotPassword); 
+router.post("/reset-password", resetPassword); 
+router.post("/fetchOtp", fetchOTP); 
+router.delete("/delete/:id", deleteUser); 
+router.get("/allUsers", allUsers); 
+router.post("/contactUs", contactUs); 
+router.get("/:userId/gameStation/:id/", findGameStationById); 
+router.get("/:userId/bookings", getAllBookingsByUserId); 
+router.get("/:stationId/games", getGamesOfGs); 
+
 
 
 

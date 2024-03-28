@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const User = require("./userSchema");
 
 const paymentSchema = new mongoose.Schema(
   {
@@ -7,26 +8,36 @@ const paymentSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    amount: {
-      type: Number,
+    gsId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "GameStation",
       required: true,
     },
     currency: {
       type: String,
       required: true,
     },
-    description: {
+    razorpay_order_id: {
       type: String,
+      required: true,
     },
-    paymentMethod: {
+    razorpay_payment_id: {
       type: String,
-    }, 
+      required: true,
+    },
+    razorpay_signature: {
+      type: String,
+      required: true,
+    },
+    amount: {
+      type: Number,
+      required: true,
+    },
     status: {
       type: String,
-      enum: ["pending", "completed", "failed"],
+      enum: ["pending", "success", "failed"],
       default: "pending",
     },
-    // Other fields as needed
   },
   { timestamps: true }
 );

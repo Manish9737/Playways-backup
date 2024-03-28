@@ -120,7 +120,7 @@ const GameStations = () => {
                     <div key={station._id} className="col-sm-6 col-md-12 mb-3">
                       <div className="card mb-3 shadow">
                         <div className="row">
-                          <div className="col-md-4 ">
+                          <div className="col-md-5">
                             <img
                               src={
                                 station.gsLogo
@@ -135,14 +135,15 @@ const GameStations = () => {
                               }}
                             />
                           </div>
-                          <div className="col-md-8">
+                          <div className="col-md-7">
                             <div className="card-body">
                               <h3 className="card-title text-golden">
                                 {station.name}
                               </h3>
                               <span className="card-text ms-1">
-                                Time : {"7:00 AM"} to {"11:00 PM"}
-                              </span>
+                                Time : {station.openingTime || "07:00 AM"} to {station.closingTime || "12:00 AM"}
+                              </span><br />
+                              <span className="card-text text-muted ms-1">{station.address}</span>
                               <p className="card-text ms-1">{station.city}</p>
                               <button
                                 to="#"

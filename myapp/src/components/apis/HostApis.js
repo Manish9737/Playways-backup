@@ -37,6 +37,8 @@ const hostApis = {
     getAllGamesOfGs: (stationId) => axiosInstance.get(`/gameStation/${stationId}/games`),
     getAllGames: () => axiosInstance.get('/games/all'),
     addGameInGs: (stationId, gameId, description, slotPrice, time) => axiosInstance.post(`/gameStation/addGame/${stationId}`, {gameId, description, slotPrice, time}),
+    updateGameInGs: (stationId, gameId, description, slotPrice, time) => axiosInstance.put(`/gameStation/${stationId}/updateGame/${gameId}`, { description, slotPrice, time}),
+    deleteGameInGs: (stationId, gameId) => axiosInstance.delete(`/gameStation/${stationId}/deleteGame/${gameId}`),
     getAllBookingsOfGs: (stationId) => axiosInstance.get(`/gameStation/${stationId}/bookings`),
     setTiming: ( stationId, openingTime, closingTime, closedDays) => axiosInstance.put(`/gameStation/timing/${stationId}`, {openingTime, closingTime, closedDays}),
     addImage: (stationId, formdata) => axiosInstance.post(`/gameStation/${stationId}/Media`, formdata,
@@ -56,6 +58,11 @@ const hostApis = {
     addSlots: (stationId, slots) => axiosInstance.post(`/slots/${stationId}/addSlots`, slots),
     updateSlotTime: (slotId, slotsData) => axiosInstance.put(`/slots/${slotId}/updateSlot`, slotsData),
     deleteSlot: (slotId) => axiosInstance.delete(`/slots/${slotId}/deleteSlot`),
+
+    allPayments: (stationId) => axiosInstance.get(`/payment/${stationId}`),
+
+    bankDetails: (stationId, bankDetails) => axiosInstance.post(`/bankDetails/${stationId}/bankDetails`, bankDetails),
+    getBankDetails: (stationId) => axiosInstance.get(`/bankDetails/${stationId}/bankDetails`),
 };
 
 export default hostApis;

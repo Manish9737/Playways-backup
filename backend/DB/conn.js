@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 require("dotenv").config()
-// const { app, analytics } = require("../DB/firebase");
 const DB = process.env.DATABASE;
 
 

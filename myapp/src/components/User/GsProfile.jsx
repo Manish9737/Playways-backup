@@ -61,7 +61,7 @@ const GsProfile = () => {
                         <div className="row">
                           <div className="col-md-6">
                             <div className="text-start">
-                              <Link to="/gameStations" className="text-white">
+                              <Link to={`/gameStation/${stationId}/games`} className="text-white">
                                 <FaArrowLeft className="fs-5" />
                               </Link>
                             </div>

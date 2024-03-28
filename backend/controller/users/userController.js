@@ -465,7 +465,7 @@ const contactUs = async (req, res, next) => {
 
     const mailOptions = {
       from: "PlayWays <" + process.env.Email + ">",
-      to: "parth.pics09@gmail.com",
+      to: "kumavatmanish5@gmail.com",
       subject: subject,
       text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
     };
@@ -517,7 +517,7 @@ const getAllBookingsByUserId = async (req, res, next) => {
   const userId = req.params.userId;
 
   try {
-    const bookings = await Booking.find({ userId }).populate("game");
+    const bookings = await Booking.find({ userId }).populate("game").populate("gameStationId");
 
     if (!bookings || bookings.length === 0) {
       return res.status(404).json({ message: "No bookings found for this user", success: false });
@@ -527,6 +527,34 @@ const getAllBookingsByUserId = async (req, res, next) => {
   } catch (error) {
     console.error("Error fetching bookings by userId:", error);
     return res.status(500).json({ message: "Internal server error", success: false });
+  }
+};
+
+const getGamesOfGs = async (req, res, next) => {
+  const { stationId } = req.params;
+
+  try {
+    const gameStation = await GameStation.findById(stationId).populate(
+      "games.game"
+    );
+
+    if (!gameStation) {
+      return res.status(404).json({ message: "GameStation not found" });
+    }
+
+    const games = gameStation.games.map((game) => ({
+      id: game.game.id,
+      image: game.game.image,
+      name: game.game.name,
+      timing: game.time,
+      description: game.description,
+      slotPrice: game.slotPrice,
+    }));
+
+    res.status(200).json({ games });
+  } catch (error) {
+    console.error("Error fetching games:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -546,5 +574,6 @@ module.exports = {
   sendOTP,
   contactUs,
   findGameStationById,
-  getAllBookingsByUserId
+  getAllBookingsByUserId,
+  getGamesOfGs
 };

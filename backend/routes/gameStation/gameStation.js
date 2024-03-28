@@ -25,6 +25,8 @@ const {
   getSlotsbyGsid,
   getGameByIdFromGs,
   getSlotsByStationIdGameIdDate,
+  updateGameInGs,
+  deleteGameFromGs,
   // generateGameSlots,
 } = require("../../controller/gameStation/gameStationController");
 
@@ -57,7 +59,13 @@ router.get("/:hostId/stations", getCountOfStationsById);  // get all stations by
 
 router.post("/addGame/:gameStationId", addGameToGs);  // add games to gs
 
+router.put('/:gameStationId/updateGame/:gameId', updateGameInGs);  // update games to gs
+
+router.delete('/:gameStationId/deleteGame/:gameId', deleteGameFromGs);  // delete games to gs
+
 router.get("/:stationId/games", getGamesOfGs);  // get all games associated with gs
+
+// router.get("/:stationId/games", getGamesOfGs);  // get all games associated with gs
 
 router.get("/:stationId/bookings", getAllBookingsByGsId);  // get all games associated with gs
 

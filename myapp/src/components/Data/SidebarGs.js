@@ -1,12 +1,6 @@
-import { FaBook, FaDollarSign, FaGamepad, FaHome, FaUser } from "react-icons/fa";
+import { FaBook, FaDollarSign, FaGamepad, FaUser } from "react-icons/fa";
 
 const SidebarGs = (stationId) => [
-  {
-    title: "Home",
-    path: "/host/",
-    icon: <FaHome className="text-warning" />,
-    cName: "nav-text",
-  },
   {
     title: "Profile",
     icon: <FaUser className="text-warning" />,

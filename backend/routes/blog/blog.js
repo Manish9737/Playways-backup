@@ -1,4 +1,5 @@
 var express = require("express");
+var router = express.Router();
 const {
   createBlog,
   getAllBlogs,
@@ -7,7 +8,6 @@ const {
   deleteBlog,
 } = require("../../controller/Blog/blogsContoller");
 const upload = require("../../middlewares/singleFileUpload");
-var router = express.Router();
 
 router.post("/add", upload("images").single("image"), createBlog);
 router.get("/get", getAllBlogs);
