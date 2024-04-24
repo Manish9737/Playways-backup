@@ -7,7 +7,6 @@ import BookingInterface from "../User/BookingInterface";
 import PaymentGateway from "../User/PaymentGateway";
 import ForgotPassword from "../User/ForgotPassword";
 import ResetPassword from "../User/ResetPassword";
-import UserDetails from "../User/UserDetails";
 import ProfilePage from "../User/ProfilePage";
 import EditProfilePage from "../User/EditProfilePage";
 import FAQPage from "../User/FAQPage";
@@ -24,7 +23,7 @@ import PrivateRoute from "../User/PrivateRoute";
 import Navbar from "../User/Navbar";
 import Games from "../User/Games";
 import MyBookings from "../User/MyBookings";
-// import Chat from "../User/Chat";
+import "../../App.css"
 
 const UserRoutes = () => {
   return (
@@ -46,13 +45,11 @@ const UserRoutes = () => {
       >
         <Route path="" element={<Home />} />
         <Route path="feedback" element={<FeedbackPage />} />
-        {/* <Route path="chat" element={<Chat />} /> */}
         <Route path="aboutUs" element={<AboutUs />} />
         <Route path="blogs" element={<Blogs />} />
         <Route path="contactUs" element={<ContactUs />} />
         <Route path="profile" element={<ProfilePage />} />
         <Route path="edit-profile/:userId" element={<EditProfilePage />} />
-        <Route path="update-details" element={<UserDetails />} />
         <Route path="bookings" element={<MyBookings />} />
 
         <Route path="gameStations" element={<GameStations />} />

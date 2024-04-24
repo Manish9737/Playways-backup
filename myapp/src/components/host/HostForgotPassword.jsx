@@ -18,7 +18,7 @@ const HostForgotPassword = () => {
     if (success === "Password reset otp sent successfully.") {
       setTimeout(() => {
         navigate("/host/otpVerification");
-      }, 3000);
+      }, 1500);
     }
   }, [success, navigate]);
 
@@ -49,7 +49,7 @@ const HostForgotPassword = () => {
     }
   };
   return (
-    <div className="bg">
+    <div className="bg-host">
       <div className="container p-4">
         <div className="row justify-content-center">
           <div className="col-md-5 m-3">

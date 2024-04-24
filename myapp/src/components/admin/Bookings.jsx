@@ -18,7 +18,7 @@ const Bookings = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await adminApis.fetchBookings(); // Update the API endpoint
+        const response = await adminApis.fetchBookings();
         setBookings(response.data.bookings);
         setLoading(false);
       } catch (error) {
@@ -65,7 +65,6 @@ const Bookings = () => {
       <h1 className="mt-4 mb-4">Bookings</h1>
       <div className="card">
         <div className="card-body">
-          {/* <h2 className="card-title mb-3">Bookings</h2> */}
           <div className="mb-3">
             <button
               className={`btn btn-outline-golden rounded-5 md-mb-1 me-2 ${

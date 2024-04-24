@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import userApis from "../apis/UserApis";
 import Logo from "../imgs/Logo.png";
-import { FaArrowLeft, FaMapMarkerAlt } from "react-icons/fa";
+import { FaArrowLeft, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
 
 const GsProfile = () => {
   const { stationId } = useParams();
   const [stationData, setStationData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showImages, setShowImages] = useState(true);
+  const [gameCount, setGameCount ] = useState(0)
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
@@ -30,6 +31,19 @@ const GsProfile = () => {
     fetchStationData();
   }, [stationId, userId]);
 
+  useEffect(() => {
+    const fetchGamesofGs = async() => {
+      try {
+        const response = await userApis.getAllGamesOfGs(stationId);
+        setGameCount(response.data.games.length);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchGamesofGs();
+  },[stationId])
+
   const toggleView = (view) => {
     if (view === "images") {
       setShowImages(true);
@@ -45,6 +59,18 @@ const GsProfile = () => {
     }
   };
 
+  const handlePhoneClick = () => {
+    const openDialer = (phoneNumber) => {
+      const telLink = `tel:${phoneNumber}`;
+      window.open(telLink, "_blank");
+    };
+
+    if (stationData && stationData.phone) {
+      openDialer(stationData.phone);
+    }
+  };
+
+
   return (
     <>
       <div className="container mt-3">
@@ -58,18 +84,28 @@ const GsProfile = () => {
                   <div className="card-body text-white">
                     <div className="row mb-3">
                       <div className="col-12">
-                        <div className="row">
-                          <div className="col-md-6">
+                        <div className="row align-items-center justify-content-between">
+                          <div className="col-4 col-md-6">
                             <div className="text-start">
-                              <Link to={`/gameStation/${stationId}/games`} className="text-white">
+                              <Link
+                                to={`/gameStation/${stationId}/games`}
+                                className="text-white"
+                              >
                                 <FaArrowLeft className="fs-5" />
                               </Link>
                             </div>
                           </div>
-                          <div className="col-md-6">
+                          <div className="col-8 col-md-6">
                             <div className="text-end">
                               <Link
-                              title="Show station on map"
+                                title="Call game station"
+                                className="text-white me-2"
+                                onClick={handlePhoneClick}
+                              >
+                                <FaPhoneAlt className="fs-5" />
+                              </Link>
+                              <Link
+                                title="Show station on map"
                                 className="text-white me-2"
                                 onClick={handleMapClick}
                               >
@@ -128,10 +164,10 @@ const GsProfile = () => {
                               style={{ userSelect: "none" }}
                             >
                               <label className="fs-4" htmlFor="status">
-                                Status
+                                Games
                               </label>
                               <h5 className="text-uppercase" id="status">
-                                {stationData.status}
+                                {gameCount}
                               </h5>
                             </div>
                           </div>
@@ -170,7 +206,7 @@ const GsProfile = () => {
                           <img
                             key={index}
                             src={`${process.env.REACT_APP_baseUrl}${image}`}
-                            alt="Iamges"
+                            alt="Images"
                             className="img-fluid"
                             width={window.innerWidth < 768 ? "150" : "300"}
                             style={{ aspectRatio: "1/1", objectFit: "cover" }}
@@ -203,12 +239,6 @@ const GsProfile = () => {
             </>
           )
         )}
-        {/* <ToastMessages
-        show={toast.show}
-        onClose={() => setToast({ ...toast, show: false })}
-        type={toast.type}
-        message={toast.message}
-      /> */}
       </div>
     </>
   );

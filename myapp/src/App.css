@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Satisfy&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
 
 :root {
   --primary-text-color: #183b56;
@@ -17,12 +18,16 @@
   --light-golden: #e3c66d;
 }
 
+body {
+  font-family: Quicksand;
+}
+
 .bg-golden {
   background-color: var(--golden);
 }
 
 .bg-User {
-  background-image: url('/src/components/imgs//games.png');
+  background-image: url("/src/components/imgs//games.png");
 }
 
 .btn-golden {

@@ -130,7 +130,7 @@ const UpdateDetails = () => {
       <div className="container mt-4">
         <div className="card m-md-3 mt-lg-5 mb-lg-5 shadow-lg">
           <div className="card-body">
-            <h2 className="text-center display-5 mb-5">Add Game Station</h2>
+            <h2 className="text-center display-5 mb-5">Update Game Station</h2>
             <form onSubmit={handleSubmit}>
               <div className="container ">
                 <div className="row">
@@ -147,7 +147,7 @@ const UpdateDetails = () => {
                           className="d-block cursor-pointer"
                         >
                           <div className="mt-4">
-                          {logoAvailable ? ( // Conditionally render based on logoAvailable state
+                          {logoAvailable ? ( 
                             <img
                               src={
                                 formData.gsLogo instanceof File

@@ -57,7 +57,7 @@ const OtpVerification = () => {
       style={{ minHeight: "70vh" }}
     >
       <div className="col-md-5">
-        <div className="card">
+        <div className="card shadow-lg">
           <div className="card-body">
             <h2
               className="text-center mb-4 text-warning"

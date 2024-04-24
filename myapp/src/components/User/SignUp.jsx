@@ -220,6 +220,7 @@ const SignUp = () => {
                           name="phone"
                           placeholder="Phone Number"
                           autoComplete="tel"
+                          maxLength={12}
                           value={phone}
                           onChange={handleChange}
                           required

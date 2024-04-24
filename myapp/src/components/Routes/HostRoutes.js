@@ -9,7 +9,6 @@ import GameStationForm from "../host/GameStationForm";
 import GameCatalogPage from "../host/GameCatalogPage";
 import HostSidebar from "../host/HostSidebar";
 import NoPage from "../User/NoPage";
-// import GsDetails from "../admin/GsDetails";
 import GameStationProfile from "../host/GameStationProfile";
 import GameStationSidebar from "../host/GameStationSidebar";
 import GameStationGames from "../host/GameStationGames";

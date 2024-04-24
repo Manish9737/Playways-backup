@@ -55,8 +55,8 @@ const Games = () => {
         </nav>
       </div>
       <div
-        className="row justify-content-center bg-opacity-25"
-        id="bg-game-serach"
+        className="row container-fluid justify-content-center bg-opacity-25"
+        id="bg-serach"
         style={{ minHeight: "200px" }}
       >
         <div className="col-md-4 d-flex justify-content-center align-items-center">

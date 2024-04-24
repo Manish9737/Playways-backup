@@ -16,7 +16,7 @@ const ForgotPassword = () => {
     if (success === "Password reset otp sent successfully.") {
       setTimeout(() => {
         navigate("/otpVerification");
-      }, 3000);
+      }, 1500);
     }
   }, [success, navigate]);
 

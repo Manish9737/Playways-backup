@@ -8,12 +8,11 @@ const GameStationBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [showPastBookings, setShowPastBookings] = useState(false); // State to track past or future bookings
 
   useEffect(() => {
-    document.title = "PlayWays Host - Bookings"
-  })
-
-  // console.log(bookings)
+    document.title = "PlayWays Host - Bookings";
+  }, []);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -38,6 +37,17 @@ const GameStationBookings = () => {
     setShowModal(false);
   };
 
+  // Filter bookings based on past or future bookings
+  const filteredBookings = showPastBookings
+    ? bookings.filter(
+        (booking) =>
+          new Date(booking.slotDate) < new Date(new Date().setHours(0, 0, 0, 0))
+      )
+    : bookings.filter(
+        (booking) =>
+          new Date(booking.slotDate) >= new Date(new Date().setHours(0, 0, 0, 0))
+      );
+
   return (
     <>
       <div className="container mt-4">
@@ -55,7 +65,19 @@ const GameStationBookings = () => {
           </ol>
         </nav>
 
-        <h2 className="text-center mb-4 ">Bookings</h2>
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h2 className="text-center mb-0">Bookings</h2>
+          <div>
+            <Button
+              variant="primary"
+              className="me-2"
+              onClick={() => setShowPastBookings(!showPastBookings)}
+            >
+              {showPastBookings ? "Show New Bookings" : "Show History"}
+            </Button>
+          </div>
+        </div>
+
         <div
           className="table-responsive"
           style={{ maxHeight: "500px", overflowY: "auto" }}
@@ -69,21 +91,19 @@ const GameStationBookings = () => {
                 <th scope="col">GameStation</th>
                 <th scope="col">Game</th>
                 <th scope="col">Slot Timing</th>
-                {/* <th scope="col">Booking Date</th> */}
                 <th scope="col">Status</th>
                 <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {bookings.map((booking, index) => (
+              {filteredBookings.map((booking, index) => (
                 <tr key={booking._id}>
-                  <td>{index+1}</td>
+                  <td>{index + 1}</td>
                   <td>{new Date(booking.slotDate).toLocaleDateString()}</td>
                   <td>{booking.userId.userName}</td>
                   <td>{booking.gameStationId.name}</td>
                   <td>{booking.game.name}</td>
                   <td>{booking.slotTiming}</td>
-                  {/* <td>{booking.createdAt}</td> */}
                   <td>{booking.status}</td>
                   <td>
                     <button
@@ -126,7 +146,8 @@ const GameStationBookings = () => {
                 <strong>Duration:</strong> {selectedBooking.duration} minutes
               </p>
               <p>
-                <strong>Booking Time:</strong> {new Date (selectedBooking.createdAt).toLocaleDateString()}
+                <strong>Booking Time:</strong>{" "}
+                {new Date(selectedBooking.createdAt).toLocaleDateString()}
               </p>
               <p>
                 <strong>Status:</strong> {selectedBooking.status}

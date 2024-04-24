@@ -62,9 +62,6 @@ const HostSignup = () => {
     }
   };
 
-  // const handleGoogleLogin = async () => {
-  //   window.open("http://localhost:1000/hosts/auth/google/callback", "_self");
-  // };
 
   return (
     <div className="bg-host">

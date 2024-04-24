@@ -74,7 +74,6 @@ const GameCatalogPage = () => {
   return (
     <>
       <div className="container">
-    
         <h1 className="text-center mb-4 text-muted">Game Catalog</h1>
         <div className="text-start mb-3">
           <Link

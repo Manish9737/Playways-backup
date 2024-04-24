@@ -8,12 +8,11 @@ const {
 } = require('../../controller/quote/quoteController');
 
 require("dotenv").config();
-// require("../../DB/conn");
 
-router.post("/add", addQuotes); // add quotes to database
-router.get('/getQuotes', getallQuotes); // Get quotes from database
-router.put('/update/:id', updateQuote); // update quotes 
-router.delete('/delete/:id', deleteQuote); // delete quotes from database
+router.post("/add", addQuotes); 
+router.get('/getQuotes', getallQuotes); 
+router.put('/update/:id', updateQuote); 
+router.delete('/delete/:id', deleteQuote); 
 
 
 module.exports = router;

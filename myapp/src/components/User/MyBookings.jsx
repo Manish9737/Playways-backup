@@ -90,19 +90,19 @@ const MyBookings = () => {
         ) : bookings.length === 0 ? (
           <p className="text-center">No bookings available.</p>
         ) : (
-          <div className="p-5">
+          <div className="p-3 p-md-5">
             {sortedBookings.map((booking) => (
               <div className="card mb-3 shadow" key={booking._id}>
                 <div className="row g-0">
                   <div className="col-md-4">
                     <img
                       src={`${process.env.REACT_APP_baseUrl}${booking.game.image}`}
-                      className="img-fluid rounded-start"
+                      className="img-fluid card-img-top "
                       alt="Game"
                       style={{
                         aspectRatio: "1/1",
                         objectFit: "cover",
-                        maxWidth: "300px",
+                        maxWidth: "350px",
                         maxHeight: "300px",
                       }}
                     />

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Logo from "../imgs/1.png";
-// import ToastMessages from "../ToastMessages";
 import { FaEllipsisV, FaMapMarkerAlt } from "react-icons/fa";
 import "../Assets/CSS/HostGSProfile.css";
 import hostApis from "../apis/HostApis";
 import ConfirmationModal from "../ConfirmationModal";
 import { GridLoader } from "react-spinners";
+import "../Assets/CSS/Host.css"
 
 const GameStationProfile = () => {
   const { stationId } = useParams();
@@ -16,11 +16,6 @@ const GameStationProfile = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
-  //   const [toast, setToast] = useState({
-  //     show: false,
-  //     type: "",
-  //     message: "",
-  //   });
 
   useEffect(() => {
     document.title = "PlayWays Host - Gamestation Profile";
@@ -143,7 +138,6 @@ const GameStationProfile = () => {
   };
 
   const handleLocationClick = () => {
-    // Redirect to Google Maps with the latitude and longitude of the station
     if (stationData && stationData.latitude && stationData.longitude) {
       const url = `https://www.google.com/maps?q=${stationData.latitude},${stationData.longitude}`;
       window.open(url, "_blank");

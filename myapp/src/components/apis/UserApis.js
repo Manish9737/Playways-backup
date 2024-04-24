@@ -34,6 +34,7 @@ const userApis = {
     fetchGameStations: () => axiosInstance.get('/gameStation/allStations'),
     getGameStationData: (userId,id) => axiosInstance.get(`/users/${userId}/gameStation/${id}`),
     getAllGamesOfGs: (stationId) => axiosInstance.get(`/users/${stationId}/games`),
+    getAllGames: () => axiosInstance.get('/games/all'),
     getGamedata: (stationId, gameId) => axiosInstance.get(`/gameStation/${stationId}/${gameId}/game`),
     fetchSlots: (stationId, gameId, date) => axiosInstance.get(`/gameStation/${stationId}/${gameId}/${date}/slots`),
     fetchSlotsbyBookingId: (bookingId) => axiosInstance.get(`/slots/${bookingId}`),

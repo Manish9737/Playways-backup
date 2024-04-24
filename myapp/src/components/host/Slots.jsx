@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import hostApis from "../apis/HostApis";
 import { FaPencilAlt, FaPlus, FaTrash } from "react-icons/fa";
@@ -75,11 +75,7 @@ const Slots = () => {
     }
   }, [slotToBeUpdated]);
 
-  useEffect(() => {
-    fetchSlotsByGsId();
-  }, [stationId]);
-
-  const fetchSlotsByGsId = async () => {
+  const fetchSlotsByGsId = useCallback(async () => {
     try {
       const response = await hostApis.getAllSlotsbyGsId(stationId);
       const slotsData = response.data.slots;
@@ -99,7 +95,11 @@ const Slots = () => {
     } catch (error) {
       console.error("Error fetching slots:", error);
     }
-  };
+  }, [stationId]);
+
+  useEffect(() => {
+    fetchSlotsByGsId();
+  }, [stationId, fetchSlotsByGsId]);
 
   const today = new Date();
   const nextWeek = new Date();
@@ -225,7 +225,7 @@ const Slots = () => {
               <th>Status</th>
               <th className="text-center">Action</th>
             </tr>
-          </thead> 
+          </thead>
           <tbody>
             {filteredSlots &&
               filteredSlots.length > 0 &&
@@ -233,7 +233,7 @@ const Slots = () => {
                 <React.Fragment key={index}>
                   {filteredSlot.slots.map((slot, slotIndex) => (
                     <tr key={slotIndex}>
-                      <td>{slotIndex+1}</td>
+                      <td>{slotIndex + 1}</td>
                       <td>
                         {slot.timefrom} - {slot.timeto}
                       </td>

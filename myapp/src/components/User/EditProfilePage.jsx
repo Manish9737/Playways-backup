@@ -27,7 +27,9 @@ function EditProfilePage() {
         const userDetails = response.data.user;
         setFormData(response.data.user);
         if (userDetails.ProfileImg) {
-          setProfilePicPreview(`${process.env.REACT_APP_baseUrl}${userDetails.ProfileImg}`);
+          setProfilePicPreview(
+            `${process.env.REACT_APP_baseUrl}${userDetails.ProfileImg}`
+          );
         } else {
           setProfilePicPreview(require("../imgs/Profile_avatar4.png"));
         }
@@ -71,7 +73,7 @@ function EditProfilePage() {
       formDataToSend.append("email", formData.email);
       formDataToSend.append("phone", formData.phone);
       formDataToSend.append("ProfileImg", formData.ProfileImg);
-      console.log(formData);
+      
       const response = await userApis.updateUserDetails(userId, formDataToSend);
       console.log("User data updated:", response.data);
       navigate("/profile");
@@ -81,89 +83,97 @@ function EditProfilePage() {
   };
 
   return (
-    <div className="container mb-5 mt-5">
-      <div className="card">
-        <div className="card-body">
-          <div className="card-header">
-            <h1 className="mt-4">Edit Profile</h1>
+    <>
+      <div id="bg-serach">
+        <div className="container mb-5 mt-5">
+          <div className="card shadow">
+            <div className="card-body p-4">
+              <div className="card-header">
+                <h1 className="mt-4">Edit Profile</h1>
+              </div>
+              <form onSubmit={handleSubmit}>
+                <div className="form-group mx-auto text-center mt-3">
+                  <input
+                    type="file"
+                    name="ProfileImg"
+                    id="profileImgInput"
+                    className="form-control"
+                    style={{ display: "none" }}
+                    accept="image/*"
+                    multiple={false}
+                    onChange={handleFileChange}
+                  />
+                  <img
+                    src={profilePicPreview}
+                    alt=""
+                    width={200}
+                    height={200}
+                    className="img-fluid rounded-circle border"
+                    style={{
+                      aspectRatio: "1/1",
+                      objectFit: "cover",
+                      cursor: "pointer",
+                    }}
+                    onClick={() =>
+                      document.getElementById("profileImgInput").click()
+                    }
+                    id="ProfilePicPreview"
+                  />
+                </div>
+                <div className="text-center mb-2 mx-auto">
+                  <label>Profile Picture</label>
+                </div>
+                <div className="form-group">
+                  <label>Name</label>
+                  <input
+                    type="text"
+                    name="userName"
+                    className="form-control"
+                    placeholder="Name"
+                    value={formData.userName}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    className="form-control"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Phone</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    className="form-control"
+                    placeholder="Phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="mt-3 text-center">
+                  <button
+                    type="button"
+                    className="btn btn-secondary me-2"
+                    onClick={() => navigate("/profile")}
+                  >
+                    Back
+                  </button>
+                  <button type="submit" className="btn btn-golden">
+                    Update
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          <form onSubmit={handleSubmit}>
-            <div className="form-group mx-auto text-center mt-3">
-              <input
-                type="file"
-                name="ProfileImg"
-                id="profileImgInput"
-                className="form-control"
-                style={{ display: "none" }}
-                accept="image/*"
-                multiple={false}
-                onChange={handleFileChange}
-              />
-              <img
-                src={profilePicPreview}
-                alt=""
-                width={200}
-                height={200}
-                className="img-fluid rounded-circle border"
-                style={{
-                  aspectRatio: "1/1",
-                  objectFit: "cover",
-                  cursor: "pointer",
-                }}
-                onClick={() =>
-                  document.getElementById("profileImgInput").click()
-                }
-                id="ProfilePicPreview"
-              />
-            </div>
-            <div className="text-center mb-2 mx-auto">
-              <label>Profile Picture</label>
-            </div>
-            <div className="form-group">
-              <label>Name</label>
-              <input
-                type="text"
-                name="userName"
-                className="form-control"
-                placeholder="Name"
-                value={formData.userName}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                className="form-control"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="form-group">
-              <label>Phone</label>
-              <input
-                type="tel"
-                name="phone"
-                className="form-control"
-                placeholder="Phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="mt-3 text-center">
-              <button type="button" className="btn btn-secondary me-2" onClick={() => navigate("/profile")}>
-                Back
-              </button>
-              <button type="submit" className="btn btn-golden">
-                Update
-              </button>
-            </div>
-          </form>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

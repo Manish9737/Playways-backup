@@ -183,7 +183,8 @@ const GameStationForm = () => {
     <div className="container mt-4">
       <div className="card m-md-3 mt-lg-5 mb-lg-5 shadow-lg">
         <div className="card-body">
-          <h2 className="text-center display-5 mb-5">Add Game Station</h2>
+          <h2 className="text-center display-5 mb-3">Add Game Station</h2>
+          <p className="text-muted text-center mb-4">Please complete the form with the location where you would like it to be displayed on the map.</p>
           {gameStationData.error && (
             <p className="text-danger text-center">{gameStationData.error}</p>
           )}
