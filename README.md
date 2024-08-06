@@ -2,6 +2,8 @@
 
 Playways is a MERN stack web application that allows users to book slots for their favorite sports games at various game stations. The platform includes three main modules: Admin, Host, and User, each providing specific functionalities to enhance the booking experience.
 
+![Playways Logo](./Logo12-removebg-preview.png)
+
 ## Features
 
 - **User Module:**
