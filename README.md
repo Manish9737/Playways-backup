@@ -42,10 +42,12 @@ Playways is a MERN stack web application that allows users to book slots for the
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/playways.git
+   ```
 
 2. Navigate to the project directory:
   ```bash
   cd playways
+  ```
 
 3. Install dependencies for both the frontend and backend:
   ```bash
@@ -53,6 +55,7 @@ Playways is a MERN stack web application that allows users to book slots for the
   npm install
   cd ../backend
   npm install
+  ```
 
 4. Create a .env file in the backend directory and add the following environment variables:
   ```bash
@@ -60,6 +63,7 @@ Playways is a MERN stack web application that allows users to book slots for the
   PORT=5000
   MONGO_URI=your_mongodb_connection_string
   JWT_SECRET=your_jwt_secret
+  ```
 
 5.Start the development server:
   ```bash
@@ -67,6 +71,7 @@ Playways is a MERN stack web application that allows users to book slots for the
   npm run dev
   cd ../frontend
   npm start
+  ```
 
 ## Usage
 
