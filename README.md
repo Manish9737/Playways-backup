@@ -39,39 +39,39 @@ Playways is a MERN stack web application that allows users to book slots for the
 
 ## Installation
 
-1. Clone the repository:
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/yourusername/playways.git
    ```
 
-2. Navigate to the project directory:
-  ```bash
-  cd playways
-  ```
+2. **Navigate to the project directory:**
+    ```bash
+    cd playways
+    ```
 
-3. Install dependencies for both the frontend and backend:
-  ```bash
-  cd frontend
-  npm install
-  cd ../backend
-  npm install
-  ```
+3. **Install dependencies for both the frontend and backend:**
+    ```bash
+    cd frontend
+    npm install
+    cd ../backend
+    npm install
+    ```
 
-4. Create a .env file in the backend directory and add the following environment variables:
-  ```bash
-  env
-  PORT=5000
-  MONGO_URI=your_mongodb_connection_string
-  JWT_SECRET=your_jwt_secret
-  ```
+4. **Create a .env file in the backend directory and add the following environment variables:**
+    ```bash
+    env
+    PORT=5000
+    MONGO_URI=your_mongodb_connection_string
+    JWT_SECRET=your_jwt_secret
+    ```
 
-5.Start the development server:
-  ```bash
-  cd backend
-  npm run dev
-  cd ../frontend
-  npm start
-  ```
+5. **Start the development server:**
+    ```bash
+    cd backend
+    npm run dev
+    cd ../frontend
+    npm start
+    ```
 
 ## Usage
 
@@ -93,24 +93,25 @@ Playways is a MERN stack web application that allows users to book slots for the
 
 ## FAQs
 
-  1. How do I register as a user on Playways?
+#### 1. How do I register as a user on Playways?
     -  Click on the "Sign Up" button on the homepage and follow the instructions to create your account.
 
-  2. How can I book a slot for a sports game?
+#### 2. How can I book a slot for a sports game?
     - Log in, navigate to the available slots section, select your desired game, date, and time, and proceed with the booking.
 
-  3. Can I cancel or modify my booking?
+#### 3. Can I cancel or modify my booking?
     - Yes, access your profile, navigate to "My Bookings," and manage your bookings accordingly.
 
-  4. What payment methods are accepted?
+#### 4. What payment methods are accepted?
     - We accept credit/debit cards, PayPal, and other online payment gateways.
 
-  5. Is there a mobile app available for Playways?
+#### 5. Is there a mobile app available for Playways?
     - Yes, Playways offers a mobile app for Android devices, available on the Google Play Store.
 
-  6. How do I reset my password if I forget it?
+#### 6. How do I reset my password if I forget it?
     - Click on the "Forgot Password" link on the login page and follow the instructions sent to your registered email address.
-    ... (additional FAQs here)
+    
+... (additional FAQs here)
 
 ## Contributing
 We welcome contributions to improve Playways. Please fork the repository and submit pull requests.
@@ -123,3 +124,4 @@ For any inquiries or support, please contact us at support@playways.com.
 
 ```sql
 Feel free to adjust any section as needed for your specific project requirements!
+```
